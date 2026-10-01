@@ -1,3 +1,6 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="manifest" href="manifest.json">
@@ -64,24 +67,6 @@
         font-size: 0.85rem;
         color: var(--text-muted);
         margin-top: 4px;
-    }
-
-    .install-option {
-        margin: 12px auto 0;
-        padding: 10px 14px;
-        font-size: 0.85rem;
-    }
-
-    .install-option[hidden] {
-        display: none;
-    }
-
-    .install-guidance {
-        max-width: 420px;
-        margin: 8px auto 0;
-        color: var(--text-muted);
-        font-size: 0.8rem;
-        line-height: 1.4;
     }
 
     main {
@@ -447,11 +432,6 @@
             font-size: 1.25rem;
         }
 
-        .install-option {
-            margin-top: 6px;
-            padding: 7px 10px;
-        }
-
         main {
             min-height: 0;
             overflow: hidden;
@@ -466,7 +446,7 @@
         .screen#main-screen.active {
             display: grid;
             grid-template-columns: minmax(0, 1fr);
-            grid-template-rows: auto auto minmax(0, 1fr);
+            grid-template-rows: auto auto minmax(0, 1fr) minmax(0, 1fr);
             align-content: stretch;
             height: 100%;
         }
@@ -546,8 +526,7 @@
             align-items: flex-start;
         }
 
-        #main-screen .queue-list,
-        #main-screen .history-list {
+        #main-screen .queue-list {
             flex: 1;
             min-height: 0;
             max-height: none;
@@ -555,9 +534,34 @@
             scrollbar-width: none;
         }
 
-        #main-screen .queue-list::-webkit-scrollbar,
-        #main-screen .history-list::-webkit-scrollbar {
+        #main-screen .queue-list::-webkit-scrollbar {
             display: none;
+        }
+
+        #main-screen .history-list {
+            flex: 1;
+            min-height: 0;
+            max-height: none;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            padding-right: 4px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) var(--surface-raised);
+            overscroll-behavior: contain;
+        }
+
+        #main-screen .history-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #main-screen .history-list::-webkit-scrollbar-track {
+            background: var(--surface-raised);
+            border-radius: 8px;
+        }
+
+        #main-screen .history-list::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 8px;
         }
 
         .queue-item {
@@ -606,13 +610,11 @@
         }
     }
 </style>
-
-
+</head>
+<body>
 <header>
     <h1>🏐 Fila de Times</h1>
     <div class="subtitle" id="match-counter-label">Partida #1</div>
-    <button class="btn-secondary install-option" id="install-app" type="button">⬇️ Instalar aplicativo</button>
-    <p class="install-guidance" id="install-guidance" aria-live="polite" hidden></p>
 </header>
 
 <main>
@@ -864,8 +866,8 @@
             if (state.history.length === 0) {
                 historyListEl.innerHTML = `<li class="history-item" style="color: var(--text-muted);">Nenhuma partida registrada ainda.</li>`;
             } else {
-                // Mostrar do mais recente para o mais antigo, limitado a 5
-                const recent = [...state.history].reverse().slice(0, 5);
+                // Mostrar todas as partidas, da mais recente para a mais antiga
+                const recent = [...state.history].reverse();
                 recent.forEach(h => {
                     const li = document.createElement('li');
                     li.className = 'history-item';
@@ -1187,43 +1189,6 @@
         modalCallback = null;
     });
 
-    let installPromptEvent = null;
-    const installButton = document.getElementById('install-app');
-    const installGuidance = document.getElementById('install-guidance');
-
-    function hideInstallOption() {
-        installButton.hidden = true;
-        installGuidance.hidden = true;
-    }
-
-    if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true) {
-        hideInstallOption();
-    }
-
-    window.addEventListener('beforeinstallprompt', (event) => {
-        event.preventDefault();
-        installPromptEvent = event;
-    });
-
-    installButton.addEventListener('click', async () => {
-        if (installPromptEvent) {
-            const promptEvent = installPromptEvent;
-            installPromptEvent = null;
-            await promptEvent.prompt();
-            const { outcome } = await promptEvent.userChoice;
-            if (outcome === 'accepted') hideInstallOption();
-            return;
-        }
-
-        const isAppleMobile = /iphone|ipad|ipod/i.test(navigator.userAgent);
-        installGuidance.textContent = isAppleMobile
-            ? 'No Safari, toque em Compartilhar e escolha "Adicionar à Tela de Início".'
-            : 'Use o menu do navegador e escolha "Instalar aplicativo" ou "Adicionar à tela inicial". A instalação exige acesso por HTTPS ou localhost.';
-        installGuidance.hidden = false;
-    });
-
-    window.addEventListener('appinstalled', hideInstallOption);
-
     if ('serviceWorker' in navigator && location.protocol !== 'file:') {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('./service-worker.js')
@@ -1234,3 +1199,5 @@
     // Inicialização ao carregar a página
     window.addEventListener('DOMContentLoaded', loadFromStorage);
 </script>
+</body>
+</html>
