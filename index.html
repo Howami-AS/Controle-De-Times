@@ -64,7 +64,8 @@
     }
 
     .subtitle {
-        font-size: 0.85rem;
+        font-size: 0.95rem;
+        font-weight: 600;
         color: var(--text-muted);
         margin-top: 4px;
     }
@@ -98,7 +99,7 @@
     }
 
     .section-title {
-        font-size: 0.9rem;
+        font-size: 1rem;
         font-weight: 700;
         color: var(--text-muted);
         text-transform: uppercase;
@@ -128,7 +129,14 @@
     }
 
     .team-box.winner-candidate {
+        border-color: var(--success);
+        box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.3), 0 0 18px rgba(22, 163, 74, 0.16);
+    }
+
+    .team-box.on-court {
         border-color: var(--primary);
+        background: #1b2e49;
+        box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.4), 0 5px 16px rgba(37, 99, 235, 0.16);
     }
 
     .team-name {
@@ -139,7 +147,7 @@
     }
 
     .team-wins {
-        font-size: 0.75rem;
+        font-size: 0.85rem;
         color: var(--text-muted);
         font-weight: 600;
         background: var(--surface-hover);
@@ -163,7 +171,15 @@
     }
 
     .actions-grid button {
-        min-height: 56px;
+        min-height: 76px;
+        font-size: 1rem;
+        font-weight: 800;
+    }
+
+    .actions-grid button.winner-candidate {
+        border: 2px solid #bbf7d0;
+        box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.3), 0 5px 18px rgba(22, 163, 74, 0.28);
+        z-index: 1;
     }
 
     button {
@@ -256,7 +272,7 @@
 
     .queue-position {
         color: var(--text-muted);
-        font-size: 0.8rem;
+        font-size: 0.9rem;
         font-weight: 700;
     }
 
@@ -271,7 +287,7 @@
     }
 
     .history-item {
-        font-size: 0.8rem;
+        font-size: 0.9rem;
         color: var(--text-muted);
         padding: 6px 10px;
         background: var(--surface-raised);
@@ -433,7 +449,7 @@
         }
 
         h1 {
-            font-size: 1.25rem;
+            font-size: 1.4rem;
         }
 
         main {
@@ -474,7 +490,7 @@
         }
 
         #main-screen .section-title {
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             margin-bottom: 6px;
         }
 
@@ -492,26 +508,32 @@
         }
 
         .team-name {
-            font-size: 1rem;
+            font-size: 1.1rem;
             margin-bottom: 2px;
         }
 
         .team-wins {
             padding: 2px 6px;
-            font-size: 0.65rem;
+            font-size: 0.75rem;
         }
 
         #main-screen .actions-grid {
+            grid-template-columns: minmax(0, 1fr);
             gap: 8px;
         }
 
         #main-screen .actions-grid button {
             min-width: 0;
-            min-height: 52px;
+            min-height: 76px;
             padding: 12px 6px;
-            font-size: 0.85rem;
+            font-size: 1rem;
             gap: 4px;
             overflow-wrap: anywhere;
+        }
+
+        #setup-screen > .card > p,
+        #manage-screen > .card > div:not(.section-title):not(.input-group) {
+            font-size: 0.9rem !important;
         }
 
         #main-screen .controls-toolbar {
@@ -521,7 +543,7 @@
         #main-screen .controls-toolbar button {
             min-width: 0;
             padding: 8px 4px;
-            font-size: 0.75rem;
+            font-size: 0.9rem;
             gap: 4px;
         }
 
@@ -571,7 +593,11 @@
 
         .queue-item {
             padding: 6px 8px;
-            font-size: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .queue-position {
+            font-size: 0.85rem;
         }
 
         .history-list {
@@ -579,8 +605,12 @@
         }
 
         .history-item {
-            padding: 4px 6px;
-            font-size: 0.7rem;
+            padding: 6px 8px;
+            font-size: 0.9rem;
+        }
+
+        .setup-team-item {
+            font-size: 0.95rem;
         }
 
         #setup-screen.active,
@@ -834,6 +864,15 @@
         if (screens.main.classList.contains('active')) {
             const t1 = state.teams.find(t => t.id === state.court1);
             const t2 = state.teams.find(t => t.id === state.court2);
+            const team1HasStreak = Boolean(t1 && t1.consecutiveWins > 0);
+            const team2HasStreak = Boolean(t2 && t2.consecutiveWins > 0);
+
+            document.getElementById('box-team-1').classList.toggle('on-court', Boolean(t1));
+            document.getElementById('box-team-2').classList.toggle('on-court', Boolean(t2));
+            document.getElementById('box-team-1').classList.toggle('winner-candidate', team1HasStreak);
+            document.getElementById('box-team-2').classList.toggle('winner-candidate', team2HasStreak);
+            document.getElementById('btn-win-1').classList.toggle('winner-candidate', team1HasStreak);
+            document.getElementById('btn-win-2').classList.toggle('winner-candidate', team2HasStreak);
 
             if (t1 && t2) {
                 document.getElementById('label-team-1').innerText = t1.name;
