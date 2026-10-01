@@ -1,0 +1,955 @@
+<!-- CSS puro otimizado para mobile-first com design moderno -->
+<style>
+    :root {
+        --primary: #2563eb;
+        --primary-hover: #1d4ed8;
+        --success: #16a34a;
+        --success-hover: #15803d;
+        --danger: #dc2626;
+        --danger-hover: #b91c1c;
+        --bg-color: #0b1220;
+        --card-bg: #141d2b;
+        --surface-raised: #1d2939;
+        --surface-hover: #273449;
+        --danger-surface: #3b1d27;
+        --danger-surface-hover: #51232d;
+        --text-main: #f1f5f9;
+        --text-muted: #94a3b8;
+        --border: #2b3748;
+        --radius: 16px;
+        --transition: all 0.2s ease-in-out;
+        color-scheme: dark;
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        padding: 16px;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    header {
+        text-align: center;
+        margin-bottom: 20px;
+        padding-top: 10px;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .subtitle {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-top: 4px;
+    }
+
+    main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .screen {
+        display: none;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .screen.active {
+        display: flex;
+    }
+
+    /* Cards and Containers */
+    .card {
+        background: var(--card-bg);
+        border-radius: var(--radius);
+        padding: 20px;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        border: 1px solid var(--border);
+    }
+
+    .section-title {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* Quadra Grid */
+    .court-container {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        gap: 12px;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+
+    .team-box {
+        background: var(--surface-raised);
+        border-radius: 12px;
+        padding: 16px 12px;
+        text-align: center;
+        border: 2px solid var(--border);
+        transition: var(--transition);
+    }
+
+    .team-box.winner-candidate {
+        border-color: var(--primary);
+    }
+
+    .team-name {
+        font-size: 1.1rem;
+        font-weight: 700;
+        word-break: break-word;
+        margin-bottom: 6px;
+    }
+
+    .team-wins {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        font-weight: 600;
+        background: var(--surface-hover);
+        padding: 2px 8px;
+        border-radius: 20px;
+        display: inline-block;
+    }
+
+    .vs-badge {
+        font-weight: 800;
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        text-align: center;
+    }
+
+    /* Result Buttons */
+    .actions-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    button {
+        cursor: pointer;
+        border: none;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        padding: 16px;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        text-align: center;
+    }
+
+    .btn-win {
+        background-color: var(--success);
+        color: white;
+        box-shadow: 0 4px 10px rgba(22, 163, 74, 0.2);
+    }
+    .btn-win:active {
+        background-color: var(--success-hover);
+        transform: scale(0.98);
+    }
+
+    .btn-primary {
+        background-color: var(--primary);
+        color: white;
+        box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+    }
+    .btn-primary:active {
+        background-color: var(--primary-hover);
+        transform: scale(0.98);
+    }
+
+    .btn-secondary {
+        background-color: var(--surface-raised);
+        color: var(--text-main);
+        border: 1px solid var(--border);
+    }
+    .btn-secondary:active {
+        background-color: var(--surface-hover);
+        transform: scale(0.98);
+    }
+
+    .btn-danger {
+        background-color: var(--danger-surface);
+        color: var(--danger);
+    }
+    .btn-danger:active {
+        background-color: var(--danger-surface-hover);
+        transform: scale(0.98);
+    }
+
+    /* Controls Toolbar */
+    .controls-toolbar {
+        display: grid;
+        grid-template-columns: repeat(3, 1f);
+        gap: 8px;
+    }
+    .controls-toolbar button {
+        padding: 12px 8px;
+        font-size: 0.85rem;
+    }
+
+    /* Queue List */
+    .queue-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-height: 180px;
+        overflow-y: auto;
+        padding-right: 4px;
+    }
+
+    .queue-item {
+        background: var(--surface-raised);
+        border: 1px solid var(--border);
+        padding: 10px 14px;
+        border-radius: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .queue-position {
+        color: var(--text-muted);
+        font-size: 0.8rem;
+        font-weight: 700;
+    }
+
+    /* History accordion/list */
+    .history-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        max-height: 120px;
+        overflow-y: auto;
+    }
+
+    .history-item {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        padding: 6px 10px;
+        background: var(--surface-raised);
+        border-radius: 6px;
+        border-left: 3px solid var(--primary);
+    }
+
+    /* Setup / Management Form Elements */
+    .input-group {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+
+    input[type="text"] {
+        flex: 1;
+        padding: 12px 16px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        font-size: 1rem;
+        outline: none;
+        background: var(--card-bg);
+        transition: var(--transition);
+    }
+
+    input[type="text"]:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .setup-teams-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-height: 250px;
+        overflow-y: auto;
+        margin-bottom: 16px;
+    }
+
+    .setup-team-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--surface-raised);
+        padding: 8px 12px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        font-weight: 600;
+    }
+
+    .icon-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--danger);
+        padding: 6px;
+        border-radius: 6px;
+        font-size: 1rem;
+    }
+    .icon-btn:hover {
+        background: var(--danger-surface);
+    }
+
+    /* Footer */
+    footer {
+        text-align: center;
+        padding: 16px 0;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        margin-top: auto;
+    }
+
+    /* Modal / Confirmation overlay */
+    .modal-overlay {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        z-index: 1000;
+    }
+    .modal-overlay.active {
+        display: flex;
+    }
+    .modal-card {
+        background: var(--card-bg);
+        padding: 24px;
+        border-radius: var(--radius);
+        width: 100%;
+        max-width: 320px;
+        text-align: center;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+    .modal-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+    }
+    .modal-text {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        margin-bottom: 20px;
+    }
+    .modal-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+</style>
+
+
+<header>
+    <h1>🏐 Fila de Times</h1>
+    <div class="subtitle" id="match-counter-label">Partida #1</div>
+</header>
+
+<main>
+    <!-- TELA 1: CADASTRO / CONFIGURAÇÃO INICIAL -->
+    <div id="setup-screen" class="screen active">
+        <div class="card">
+            <div class="section-title">Configurar Nova Rotação</div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
+                Adicione pelo menos 3 times para iniciar a rotação automática.
+            </p>
+            <div class="input-group">
+                <input type="text" id="new-team-input" placeholder="Nome do time (ex: Time 1)" autocomplete="off">
+                <button class="btn-primary" id="btn-add-setup" style="padding: 12px 16px;">+ Adicionar</button>
+            </div>
+            <ul class="setup-teams-list" id="setup-teams-list">
+                <!-- Preenchido via JS -->
+            </ul>
+            <button class="btn-win" id="btn-start-rotation" style="width: 100%;" disabled>INICIAR ROTAÇÃO</button>
+        </div>
+    </div>
+
+    <!-- TELA 2: PRINCIPAL (ROTAÇÃO E PLACAR) -->
+    <div id="main-screen" class="screen">
+        <!-- EM QUADRA -->
+        <div class="card">
+            <div class="section-title">Em Quadra</div>
+            <div class="court-container">
+                <div class="team-box" id="box-team-1">
+                    <div class="team-name" id="label-team-1">---</div>
+                    <div class="team-wins" id="wins-team-1">Vitórias: 0</div>
+                </div>
+                <div class="vs-badge">VS</div>
+                <div class="team-box" id="box-team-2">
+                    <div class="team-name" id="label-team-2">---</div>
+                    <div class="team-wins" id="wins-team-2">Vitórias: 0</div>
+                </div>
+            </div>
+
+            <div class="section-title" style="margin-top: 16px;">Resultado da Partida</div>
+            <div class="actions-grid">
+                <button class="btn-win" id="btn-win-1">🏆 <span id="btn-name-1">Time 1</span> VENCEU</button>
+                <button class="btn-win" id="btn-win-2">🏆 <span id="btn-name-2">Time 2</span> VENCEU</button>
+            </div>
+        </div>
+
+        <!-- CONTROLES RÁPIDOS -->
+        <div class="controls-toolbar">
+            <button class="btn-secondary" id="btn-undo">↩️ Desfazer</button>
+            <button class="btn-secondary" id="btn-reset">🔄 Reiniciar</button>
+            <button class="btn-secondary" id="btn-manage">⚙️ Gerenciar</button>
+        </div>
+
+        <!-- PRÓXIMOS (FILA) -->
+        <div class="card">
+            <div class="section-title">Próximos na Fila</div>
+            <ul class="queue-list" id="queue-list">
+                <!-- Preenchido via JS -->
+            </ul>
+        </div>
+
+        <!-- HISTÓRICO SIMPLES -->
+        <div class="card" style="padding: 14px 20px;">
+            <div class="section-title" style="margin-bottom: 8px;">Histórico Recente</div>
+            <ul class="history-list" id="history-list">
+                <!-- Preenchido via JS -->
+            </ul>
+        </div>
+    </div>
+
+    <!-- TELA 3: GERENCIAMENTO DE TIMES EM ANDAMENTO -->
+    <div id="manage-screen" class="screen">
+        <div class="card">
+            <div class="section-title">Gerenciar Times</div>
+            <div class="input-group">
+                <input type="text" id="manage-team-input" placeholder="Novo time durante o jogo" autocomplete="off">
+                <button class="btn-primary" id="btn-add-manage" style="padding: 12px 16px;">+ Adicionar</button>
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
+                Novos times entram automaticamente no final da fila.
+            </div>
+            <ul class="setup-teams-list" id="manage-teams-list" style="margin-bottom: 16px;">
+                <!-- Preenchido via JS -->
+            </ul>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-secondary" id="btn-back-main" style="flex: 1;">Voltar</button>
+                <button class="btn-danger" id="btn-clear-data" style="flex: 1;">🗑️ Limpar Tudo</button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Modal de Confirmação Genérico -->
+<div class="modal-overlay" id="confirm-modal">
+    <div class="modal-card">
+        <div class="modal-title" id="modal-title">Confirmação</div>
+        <div class="modal-text" id="modal-text">Deseja realmente prosseguir?</div>
+        <div class="modal-actions">
+            <button class="btn-secondary" id="modal-cancel">Cancelar</button>
+            <button class="btn-danger" id="modal-confirm">Confirmar</button>
+        </div>
+    </div>
+</div>
+
+<footer>
+    ©️ Alisson Salvador 2026
+</footer>
+
+<!-- Lógica da Aplicação com JavaScript Puro -->
+<script>
+    // Estado Global da Aplicação
+    let state = {
+        setupTeams: ["Time 1", "Time 2", "Time 3", "Time 4", "Time 5"],
+        teams: [], // { id, name, consecutiveWins }
+        court1: null, // ID do time em quadra 1
+        court2: null, // ID do time em quadra 2
+        queue: [], // Array de IDs de times na fila
+        matchNumber: 1,
+        history: [], // [{ matchNum, winnerName, loserName }]
+        historyStateStack: [] // Pilha de estados anteriores para Desfazer real
+    };
+
+    // Identificadores Únicos
+    let nextId = 1;
+
+    // Elementos do DOM
+    const screens = {
+        setup: document.getElementById('setup-screen'),
+        main: document.getElementById('main-screen'),
+        manage: document.getElementById('manage-screen')
+    };
+
+    // Carregar Estado do LocalStorage se existir
+    function loadFromStorage() {
+        const saved = localStorage.getItem('fila_de_times_state');
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                state = parsed;
+                if (state.teams && state.teams.length > 0) {
+                    // Encontrar maior ID atual para evitar colisão
+                    const maxId = Math.max(...state.teams.map(t => t.id), 0);
+                    nextId = maxId + 1;
+                    showScreen('main');
+                } else {
+                    showScreen('setup');
+                }
+            } catch (e) {
+                console.error("Erro ao carregar storage", e);
+                showScreen('setup');
+            }
+        } else {
+            // Estado inicial padrão com 5 times sugeridos
+            resetSetupDefaults();
+            showScreen('setup');
+        }
+        render();
+    }
+
+    // Salvar Estado no LocalStorage
+    function saveToStorage() {
+        localStorage.setItem('fila_de_times_state', JSON.stringify(state));
+    }
+
+    // Trocar de Tela
+    function showScreen(screenName) {
+        Object.values(screens).forEach(s => s.classList.remove('active'));
+        if (screens[screenName]) {
+            screens[screenName].classList.add('active');
+        }
+    }
+
+    // Salvar estado atual na pilha de desfazer antes de mutação
+    function pushHistoryState() {
+        // Clonamos profundamente o estado atual para o histórico de desfazer
+        const currentStateClone = JSON.parse(JSON.stringify(state));
+        // Removemos a pilha interna para economizar espaço e evitar referência circular profunda
+        delete currentStateClone.historyStateStack;
+        state.historyStateStack.push(currentStateClone);
+        // Manter limite de histórico de desfazer (ex: últimas 20 ações)
+        if (state.historyStateStack.length > 20) {
+            state.historyStateStack.shift();
+        }
+    }
+
+    // Resetar setup para valores padrão
+    function resetSetupDefaults() {
+        state.setupTeams = ["Time 1", "Time 2", "Time 3", "Time 4", "Time 5"];
+    }
+
+    // Renderizador Geral da Interface
+    function render() {
+        // Atualizar Contador de Partidas
+        document.getElementById('match-counter-label').innerText = `Partida #${state.matchNumber}`;
+
+        // 1. Renderizar Tela de Setup
+        if (screens.setup.classList.contains('active')) {
+            const setupListEl = document.getElementById('setup-teams-list');
+            setupListEl.innerHTML = '';
+            state.setupTeams.forEach((name, index) => {
+                const li = document.createElement('li');
+                li.className = 'setup-team-item';
+                li.innerHTML = `
+                    <span>${name}</span>
+                    <button class="icon-btn" onclick="removeSetupTeam(${index})">🗑️</button>
+                `;
+                setupListEl.appendChild(li);
+            });
+            document.getElementById('btn-start-rotation').disabled = state.setupTeams.length < 3;
+        }
+
+        // 2. Renderizar Tela Principal
+        if (screens.main.classList.contains('active')) {
+            const t1 = state.teams.find(t => t.id === state.court1);
+            const t2 = state.teams.find(t => t.id === state.court2);
+
+            if (t1 && t2) {
+                document.getElementById('label-team-1').innerText = t1.name;
+                document.getElementById('wins-team-1').innerText = `Vitórias: ${t1.consecutiveWins}`;
+                document.getElementById('btn-name-1').innerText = t1.name;
+
+                document.getElementById('label-team-2').innerText = t2.name;
+                document.getElementById('wins-team-2').innerText = `Vitórias: ${t2.consecutiveWins}`;
+                document.getElementById('btn-name-2').innerText = t2.name;
+            }
+
+            // Renderizar Fila
+            const queueListEl = document.getElementById('queue-list');
+            queueListEl.innerHTML = '';
+            if (state.queue.length === 0) {
+                queueListEl.innerHTML = `<li class="queue-item" style="color: var(--text-muted); justify-content: center;">Nenhum time na fila</li>`;
+            } else {
+                state.queue.forEach((id, idx) => {
+                    const team = state.teams.find(t => t.id === id);
+                    if (team) {
+                        const li = document.createElement('li');
+                        li.className = 'queue-item';
+                        li.innerHTML = `
+                            <span>${team.name}</span>
+                            <span class="queue-position">${idx + 1}º lugar</span>
+                        `;
+                        queueListEl.appendChild(li);
+                    }
+                });
+            }
+
+            // Renderizar Histórico Recente
+            const historyListEl = document.getElementById('history-list');
+            historyListEl.innerHTML = '';
+            if (state.history.length === 0) {
+                historyListEl.innerHTML = `<li class="history-item" style="color: var(--text-muted);">Nenhuma partida registrada ainda.</li>`;
+            } else {
+                // Mostrar do mais recente para o mais antigo, limitado a 5
+                const recent = [...state.history].reverse().slice(0, 5);
+                recent.forEach(h => {
+                    const li = document.createElement('li');
+                    li.className = 'history-item';
+                    li.innerHTML = `Partida ${h.matchNum}: <b>${h.winnerName}</b> venceu ${h.loserName}`;
+                    historyListEl.appendChild(li);
+                });
+            }
+        }
+
+        // 3. Renderizar Tela de Gerenciamento
+        if (screens.manage.classList.contains('active')) {
+            const manageListEl = document.getElementById('manage-teams-list');
+            manageListEl.innerHTML = '';
+            
+            // Mostrar todos os times atuais com indicação de onde estão
+            state.teams.forEach(team => {
+                let statusBadge = "Na Fila";
+                if (team.id === state.court1 || team.id === state.court2) {
+                    statusBadge = "Em Quadra ⚡";
+                }
+                const li = document.createElement('li');
+                li.className = 'setup-team-item';
+                li.innerHTML = `
+                    <div>
+                        <strong>${team.name}</strong>
+                        <div style="font-size: 0.7rem; color: var(--text-muted);">${statusBadge}</div>
+                    </div>
+                    <button class="icon-btn" onclick="requestRemoveTeam(${team.id}, '${team.name}')">🗑️</button>
+                `;
+                manageListEl.appendChild(li);
+            });
+        }
+
+        saveToStorage();
+    }
+
+    // --- FUNÇÕES DE SETUP ---
+    document.getElementById('btn-add-setup').addEventListener('click', () => {
+        const input = document.getElementById('new-team-input');
+        const val = input.value.trim();
+        if (val) {
+            state.setupTeams.push(val);
+            input.value = '';
+            render();
+        }
+    });
+
+    document.getElementById('new-team-input').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            document.getElementById('btn-add-setup').click();
+        }
+    });
+
+    window.removeSetupTeam = function(index) {
+        state.setupTeams.splice(index, 1);
+        render();
+    };
+
+    // Iniciar Rotação a partir dos nomes cadastrados
+    document.getElementById('btn-start-rotation').addEventListener('click', () => {
+        if (state.setupTeams.length < 3) return;
+
+        state.teams = state.setupTeams.map((name) => ({
+            id: nextId++,
+            name: name,
+            consecutiveWins: 0
+        }));
+
+        // Definir Quadra 1 e Quadra 2 com os dois primeiros
+        state.court1 = state.teams[0].id;
+        state.court2 = state.teams[1].id;
+
+        // O restante vai para a fila
+        state.queue = [];
+        for (let i = 2; i < state.teams.length; i++) {
+            state.queue.push(state.teams[i].id);
+        }
+
+        state.matchNumber = 1;
+        state.history = [];
+        state.historyStateStack = [];
+
+        showScreen('main');
+        render();
+    });
+
+    // --- LÓGICA CORE DE ROTAÇÃO E VITÓRIA ---
+    function registerWinner(winnerNum) {
+        pushHistoryState();
+
+        const t1 = state.teams.find(t => t.id === state.court1);
+        const t2 = state.teams.find(t => t.id === state.court2);
+
+        let winner, loser;
+        if (winnerNum === 1) {
+            winner = t1;
+            loser = t2;
+        } else {
+            winner = t2;
+            loser = t1;
+        }
+
+        // Registrar no histórico
+        state.history.push({
+            matchNum: state.matchNumber,
+            winnerName: winner.name,
+            loserName: loser.name
+        });
+
+        winner.consecutiveWins++;
+
+        // Regra de Vitórias Consecutivas (2 vitórias)
+        if (winner.consecutiveWins >= 2) {
+            // AMBOS SAEM DA QUADRA E VÃO PARA O FINAL DA FILA
+            winner.consecutiveWins = 0; // Zera contador
+            loser.consecutiveWins = 0;
+
+            state.queue.push(winner.id);
+            state.queue.push(loser.id);
+
+            // Os dois próximos da fila entram na quadra
+            if (state.queue.length >= 2) {
+                state.court1 = state.queue.shift();
+                state.court2 = state.queue.shift();
+            } else if (state.queue.length === 1) {
+                // Fallback caso excepcionalmente haja apenas 1 na fila
+                state.court1 = state.queue.shift();
+                state.court2 = loser.id; // Evitar vazio caso limites incomuns
+            }
+        } else {
+            // AINDA NÃO TEM 2 VITÓRIAS CONSECUTIVAS
+            loser.consecutiveWins = 0;
+            // Perdedor sai e vai para o final da fila
+            state.queue.push(loser.id);
+
+            // Vencedor permanece em quadra
+            // O primeiro time disponível da fila entra
+            if (state.queue.length > 0) {
+                const nextTeamId = state.queue.shift();
+                if (winnerNum === 1) {
+                    state.court2 = nextTeamId;
+                } else {
+                    state.court1 = nextTeamId;
+                }
+            }
+        }
+
+        state.matchNumber++;
+        render();
+    }
+
+    document.getElementById('btn-win-1').addEventListener('click', () => registerWinner(1));
+    document.getElementById('btn-win-2').addEventListener('click', () => registerWinner(2));
+
+    // --- BOTÕES DE CONTROLE ---
+    document.getElementById('btn-undo').addEventListener('click', () => {
+        if (state.historyStateStack.length === 0) {
+            alert("Nenhuma ação anterior para desfazer!");
+            return;
+        }
+        const previousState = state.historyStateStack.pop();
+        // Restaurar estado mantendo a pilha atual de desfazer (já decrementada)
+        const currentStack = state.historyStateStack;
+        state = previousState;
+        state.historyStateStack = currentStack;
+        render();
+    });
+
+    // Reiniciar Jogo
+    document.getElementById('btn-reset').addEventListener('click', () => {
+        openModal(
+            "Novo Jogo",
+            "Deseja reiniciar a rotação atual e reconstruir a fila com os times cadastrados?",
+            () => {
+                // Reconstruir com os mesmos times atuais
+                const currentNames = state.teams.map(t => t.name);
+                if (currentNames.length < 3) {
+                    showScreen('setup');
+                    return;
+                }
+                state.teams = currentNames.map((name, idx) => ({
+                    id: idx + 1,
+                    name: name,
+                    consecutiveWins: 0
+                }));
+                nextId = state.teams.length + 1;
+                state.court1 = state.teams[0].id;
+                state.court2 = state.teams[1].id;
+                state.queue = [];
+                for (let i = 2; i < state.teams.length; i++) {
+                    state.queue.push(state.teams[i].id);
+                }
+                state.matchNumber = 1;
+                state.history = [];
+                state.historyStateStack = [];
+                render();
+            }
+        );
+    });
+
+    document.getElementById('btn-manage').addEventListener('click', () => {
+        showScreen('manage');
+        render();
+    });
+
+    document.getElementById('btn-back-main').addEventListener('click', () => {
+        showScreen('main');
+        render();
+    });
+
+    // --- GERENCIAMENTO DE TIMES EM ANDAMENTO ---
+    document.getElementById('btn-add-manage').addEventListener('click', () => {
+        const input = document.getElementById('manage-team-input');
+        const val = input.value.trim();
+        if (val) {
+            pushHistoryState();
+            const newTeam = {
+                id: nextId++,
+                name: val,
+                consecutiveWins: 0
+            };
+            state.teams.push(newTeam);
+            // Colocar no final da fila conforme regra
+            state.queue.push(newTeam.id);
+            input.value = '';
+            render();
+        }
+    });
+
+    document.getElementById('manage-team-input').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            document.getElementById('btn-add-manage').click();
+        }
+    });
+
+    let teamToRemoveId = null;
+    window.requestRemoveTeam = function(teamId, teamName) {
+        // Verificar se o time está em quadra
+        if (teamId === state.court1 || teamId === state.court2) {
+            openModal(
+                "Remover Time em Quadra",
+                `O time "${teamName}" está jogando no momento. Tem certeza que deseja removê-lo?`,
+                () => executeRemoveTeam(teamId)
+            );
+        } else {
+            executeRemoveTeam(teamId);
+        }
+    };
+
+    function executeRemoveTeam(teamId) {
+        pushHistoryState();
+        // Remover da fila se estiver lá
+        state.queue = state.queue.filter(id => id !== teamId);
+
+        // Remover da lista geral de times
+        state.teams = state.teams.filter(t => t.id !== teamId);
+
+        // Se estava em quadra, precisamos repor imediatamente com o primeiro da fila
+        if (state.court1 === teamId) {
+            if (state.queue.length > 0) {
+                state.court1 = state.queue.shift();
+            } else {
+                state.court1 = null; // Ficará pendente se faltarem times
+            }
+        } else if (state.court2 === teamId) {
+            if (state.queue.length > 0) {
+                state.court2 = state.queue.shift();
+            } else {
+                state.court2 = null;
+            }
+        }
+
+        render();
+    }
+
+    // Limpar Dados Completos (LocalStorage)
+    document.getElementById('btn-clear-data').addEventListener('click', () => {
+        openModal(
+            "Limpar Todos os Dados",
+            "Tem certeza absoluta que deseja apagar todos os dados e voltar ao cadastro inicial?",
+            () => {
+                localStorage.removeItem('fila_de_times_state');
+                resetSetupDefaults();
+                state = {
+                    setupTeams: ["Time 1", "Time 2", "Time 3", "Time 4", "Time 5"],
+                    teams: [],
+                    court1: null,
+                    court2: null,
+                    queue: [],
+                    matchNumber: 1,
+                    history: [],
+                    historyStateStack: []
+                };
+                showScreen('setup');
+                render();
+            }
+        );
+    });
+
+    // --- MODAL DE CONFIRMAÇÃO ---
+    let modalCallback = null;
+    const modalOverlay = document.getElementById('confirm-modal');
+
+    function openModal(title, text, callback) {
+        document.getElementById('modal-title').innerText = title;
+        document.getElementById('modal-text').innerText = text;
+        modalCallback = callback;
+        modalOverlay.classList.add('active');
+    }
+
+    document.getElementById('modal-cancel').addEventListener('click', () => {
+        modalOverlay.classList.remove('active');
+        modalCallback = null;
+    });
+
+    document.getElementById('modal-confirm').addEventListener('click', () => {
+        if (modalCallback) modalCallback();
+        modalOverlay.classList.remove('active');
+        modalCallback = null;
+    });
+
+    // Inicialização ao carregar a página
+    window.addEventListener('DOMContentLoaded', loadFromStorage);
+</script>
