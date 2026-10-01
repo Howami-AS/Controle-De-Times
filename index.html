@@ -1,4 +1,5 @@
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0b1220">
 <!-- CSS puro otimizado para mobile-first com design moderno -->
@@ -36,11 +37,11 @@
         background-color: var(--bg-color);
         color: var(--text-main);
         min-height: 100vh;
+        min-height: 100dvh;
         display: flex;
         flex-direction: column;
-        padding: 16px;
-        max-width: 600px;
-        margin: 0 auto;
+        width: 100%;
+        padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
     }
 
     header {
@@ -88,6 +89,8 @@
         display: flex;
         flex-direction: column;
         gap: 20px;
+        width: 100%;
+        min-width: 0;
     }
 
     .screen {
@@ -231,7 +234,7 @@
     /* Controls Toolbar */
     .controls-toolbar {
         display: grid;
-        grid-template-columns: repeat(3, 1f);
+        grid-template-columns: repeat(3, 1fr);
         gap: 8px;
     }
     .controls-toolbar button {
@@ -390,6 +393,23 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 10px;
+    }
+
+    @media (min-width: 720px) {
+        body {
+            padding: max(24px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left));
+        }
+
+        .screen#main-screen.active {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            align-content: start;
+        }
+
+        #main-screen > .card:first-child,
+        #main-screen > .controls-toolbar {
+            grid-column: 1 / -1;
+        }
     }
 </style>
 
