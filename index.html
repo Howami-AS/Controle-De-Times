@@ -1,3 +1,6 @@
+<meta charset="UTF-8">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0b1220">
 <!-- CSS puro otimizado para mobile-first com design moderno -->
 <style>
     :root {
@@ -60,6 +63,20 @@
         font-size: 0.85rem;
         color: var(--text-muted);
         margin-top: 4px;
+    }
+
+    .install-option {
+        margin: 12px auto 0;
+        padding: 10px 14px;
+        font-size: 0.85rem;
+    }
+
+    .install-guidance {
+        max-width: 420px;
+        margin: 8px auto 0;
+        color: var(--text-muted);
+        font-size: 0.8rem;
+        line-height: 1.4;
     }
 
     main {
@@ -376,6 +393,8 @@
 <header>
     <h1>🏐 Fila de Times</h1>
     <div class="subtitle" id="match-counter-label">Partida #1</div>
+    <button class="btn-secondary install-option" id="install-app" type="button">⬇️ Instalar aplicativo</button>
+    <p class="install-guidance" id="install-guidance" aria-live="polite" hidden></p>
 </header>
 
 <main>
@@ -487,7 +506,7 @@
 <script>
     // Estado Global da Aplicação
     let state = {
-        setupTeams: ["Time 1", "Time 2", "Time 3", "Time 4", "Time 5"],
+        setupTeams: ["Time 1", "Time 2", "Time 3", "Time 4"],
         teams: [], // { id, name, consecutiveWins }
         court1: null, // ID do time em quadra 1
         court2: null, // ID do time em quadra 2
@@ -562,7 +581,7 @@
 
     // Resetar setup para valores padrão
     function resetSetupDefaults() {
-        state.setupTeams = ["Time 1", "Time 2", "Time 3", "Time 4", "Time 5"];
+        state.setupTeams = ["Time 1", "Time 2", "Time 3", "Time 4"];
     }
 
     // Renderizador Geral da Interface
@@ -913,7 +932,7 @@
                 localStorage.removeItem('fila_de_times_state');
                 resetSetupDefaults();
                 state = {
-                    setupTeams: ["Time 1", "Time 2", "Time 3", "Time 4", "Time 5"],
+                    setupTeams: ["Time 1", "Time 2", "Time 3", "Time 4"],
                     teams: [],
                     court1: null,
                     court2: null,
@@ -949,6 +968,50 @@
         modalOverlay.classList.remove('active');
         modalCallback = null;
     });
+
+    let installPromptEvent = null;
+    const installButton = document.getElementById('install-app');
+    const installGuidance = document.getElementById('install-guidance');
+
+    function hideInstallOption() {
+        installButton.hidden = true;
+        installGuidance.hidden = true;
+    }
+
+    if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true) {
+        hideInstallOption();
+    }
+
+    window.addEventListener('beforeinstallprompt', (event) => {
+        event.preventDefault();
+        installPromptEvent = event;
+    });
+
+    installButton.addEventListener('click', async () => {
+        if (installPromptEvent) {
+            const promptEvent = installPromptEvent;
+            installPromptEvent = null;
+            await promptEvent.prompt();
+            const { outcome } = await promptEvent.userChoice;
+            if (outcome === 'accepted') hideInstallOption();
+            return;
+        }
+
+        const isAppleMobile = /iphone|ipad|ipod/i.test(navigator.userAgent);
+        installGuidance.textContent = isAppleMobile
+            ? 'No Safari, toque em Compartilhar e escolha "Adicionar à Tela de Início".'
+            : 'Use o menu do navegador e escolha "Instalar aplicativo" ou "Adicionar à tela inicial". A instalação exige acesso por HTTPS ou localhost.';
+        installGuidance.hidden = false;
+    });
+
+    window.addEventListener('appinstalled', hideInstallOption);
+
+    if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./service-worker.js')
+                .catch((error) => console.error('Erro ao registrar service worker', error));
+        });
+    }
 
     // Inicialização ao carregar a página
     window.addEventListener('DOMContentLoaded', loadFromStorage);
