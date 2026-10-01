@@ -162,6 +162,10 @@
         gap: 12px;
     }
 
+    .actions-grid button {
+        min-height: 56px;
+    }
+
     button {
         cursor: pointer;
         border: none;
@@ -402,7 +406,7 @@
         .screen#main-screen.active {
             display: grid;
             grid-template-columns: minmax(0, 1fr);
-            grid-template-rows: auto auto minmax(0, 1fr) minmax(0, 1fr);
+            grid-template-rows: auto auto minmax(0, 0.9fr) minmax(0, 1.1fr);
             align-content: start;
             height: 100%;
         }
@@ -446,7 +450,7 @@
         .screen#main-screen.active {
             display: grid;
             grid-template-columns: minmax(0, 1fr);
-            grid-template-rows: auto auto minmax(0, 1fr) minmax(0, 1fr);
+            grid-template-rows: auto auto minmax(0, 0.9fr) minmax(0, 1.1fr);
             align-content: stretch;
             height: 100%;
         }
@@ -503,8 +507,9 @@
 
         #main-screen .actions-grid button {
             min-width: 0;
-            padding: 10px 6px;
-            font-size: 0.75rem;
+            min-height: 52px;
+            padding: 12px 6px;
+            font-size: 0.85rem;
             gap: 4px;
             overflow-wrap: anywhere;
         }
