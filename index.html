@@ -397,18 +397,212 @@
 
     @media (min-width: 720px) {
         body {
+            height: 100vh;
+            height: 100dvh;
+            min-height: 0;
+            overflow: hidden;
             padding: max(24px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left));
+        }
+
+        main {
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .screen {
+            flex: 1;
+            min-height: 0;
         }
 
         .screen#main-screen.active {
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-columns: minmax(0, 1fr);
+            grid-template-rows: auto auto minmax(0, 1fr) minmax(0, 1fr);
             align-content: start;
+            height: 100%;
         }
 
         #main-screen > .card:first-child,
         #main-screen > .controls-toolbar {
             grid-column: 1 / -1;
+        }
+    }
+
+    @media (max-width: 719px) {
+        body {
+            height: 100vh;
+            height: 100dvh;
+            min-height: 0;
+            overflow: hidden;
+            padding: max(8px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+        }
+
+        header {
+            flex: 0 0 auto;
+            margin-bottom: 8px;
+            padding-top: 0;
+        }
+
+        h1 {
+            font-size: 1.25rem;
+        }
+
+        .install-option {
+            margin-top: 6px;
+            padding: 7px 10px;
+        }
+
+        main {
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .screen {
+            flex: 1;
+            min-height: 0;
+            gap: 8px;
+        }
+
+        .screen#main-screen.active {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            grid-template-rows: auto auto minmax(0, 1fr);
+            align-content: stretch;
+            height: 100%;
+        }
+
+        #main-screen > .card:first-child,
+        #main-screen > .controls-toolbar {
+            grid-column: 1 / -1;
+        }
+
+        #main-screen > .card:first-child {
+            padding: 12px;
+        }
+
+        #main-screen > .card:nth-child(3),
+        #main-screen > .card:nth-child(4) {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            min-height: 0;
+            padding: 12px;
+        }
+
+        #main-screen .section-title {
+            font-size: 0.8rem;
+            margin-bottom: 6px;
+        }
+
+        #main-screen > .card:first-child > .section-title[style] {
+            margin-top: 6px !important;
+        }
+
+        .court-container {
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .team-box {
+            padding: 8px 6px;
+        }
+
+        .team-name {
+            font-size: 1rem;
+            margin-bottom: 2px;
+        }
+
+        .team-wins {
+            padding: 2px 6px;
+            font-size: 0.65rem;
+        }
+
+        #main-screen .actions-grid {
+            gap: 8px;
+        }
+
+        #main-screen .actions-grid button {
+            min-width: 0;
+            padding: 10px 6px;
+            font-size: 0.75rem;
+            gap: 4px;
+            overflow-wrap: anywhere;
+        }
+
+        #main-screen .controls-toolbar {
+            gap: 6px;
+        }
+
+        #main-screen .controls-toolbar button {
+            min-width: 0;
+            padding: 8px 4px;
+            font-size: 0.75rem;
+            gap: 4px;
+        }
+
+        #main-screen > .card:nth-child(3) .section-title,
+        #main-screen > .card:nth-child(4) .section-title {
+            min-height: 2.2em;
+            align-items: flex-start;
+        }
+
+        #main-screen .queue-list,
+        #main-screen .history-list {
+            flex: 1;
+            min-height: 0;
+            max-height: none;
+            overflow: auto;
+            scrollbar-width: none;
+        }
+
+        #main-screen .queue-list::-webkit-scrollbar,
+        #main-screen .history-list::-webkit-scrollbar {
+            display: none;
+        }
+
+        .queue-item {
+            padding: 6px 8px;
+            font-size: 0.75rem;
+        }
+
+        .history-list {
+            gap: 4px;
+        }
+
+        .history-item {
+            padding: 4px 6px;
+            font-size: 0.7rem;
+        }
+
+        #setup-screen.active,
+        #manage-screen.active {
+            flex: 1;
+        }
+
+        #setup-screen > .card,
+        #manage-screen > .card {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            min-height: 0;
+            overflow: hidden;
+            padding: 12px;
+        }
+
+        .setup-teams-list {
+            flex: 1;
+            min-height: 0;
+            max-height: none;
+            overflow: auto;
+            scrollbar-width: none;
+        }
+
+        .setup-teams-list::-webkit-scrollbar {
+            display: none;
+        }
+
+        footer {
+            display: none;
         }
     }
 </style>

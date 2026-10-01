@@ -3,6 +3,7 @@
 "short_name": "FilaTimes",
 "start_url": "index.html",
 "display": "fullscreen",
+"orientation": "portrait",
 "background_color": "#0b1220",
 "theme_color": "#0b1220",
 "icons": [
