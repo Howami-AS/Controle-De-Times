@@ -70,6 +70,24 @@
         margin-top: 4px;
     }
 
+    .install-option {
+        margin: 10px auto 0;
+        padding: 10px 14px;
+        font-size: 0.95rem;
+    }
+
+    .install-option[hidden] {
+        display: none;
+    }
+
+    .install-guidance {
+        max-width: 420px;
+        margin: 8px auto 0;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+
     main {
         flex: 1;
         display: flex;
@@ -452,6 +470,12 @@
             font-size: 1.4rem;
         }
 
+        .install-option {
+            margin-top: 6px;
+            padding: 8px 10px;
+            font-size: 0.9rem;
+        }
+
         main {
             min-height: 0;
             overflow: hidden;
@@ -650,6 +674,8 @@
 <header>
     <h1>🏐 Fila de Times</h1>
     <div class="subtitle" id="match-counter-label">Partida #1</div>
+    <button class="btn-secondary install-option" id="install-app" type="button">Instalar aplicativo</button>
+    <p class="install-guidance" id="install-guidance" aria-live="polite" hidden></p>
 </header>
 
 <main>
@@ -1232,6 +1258,45 @@
         modalOverlay.classList.remove('active');
         modalCallback = null;
     });
+
+    let installPromptEvent = null;
+    const installButton = document.getElementById('install-app');
+    const installGuidance = document.getElementById('install-guidance');
+
+    function hideInstallOption() {
+        installButton.hidden = true;
+        installGuidance.hidden = true;
+    }
+
+    const isInstalled = window.matchMedia('(display-mode: standalone)').matches
+        || window.matchMedia('(display-mode: fullscreen)').matches
+        || navigator.standalone === true;
+
+    if (isInstalled) hideInstallOption();
+
+    window.addEventListener('beforeinstallprompt', (event) => {
+        event.preventDefault();
+        installPromptEvent = event;
+    });
+
+    installButton.addEventListener('click', async () => {
+        if (installPromptEvent) {
+            const promptEvent = installPromptEvent;
+            installPromptEvent = null;
+            await promptEvent.prompt();
+            const { outcome } = await promptEvent.userChoice;
+            if (outcome === 'accepted') hideInstallOption();
+            return;
+        }
+
+        const isAppleMobile = /iphone|ipad|ipod/i.test(navigator.userAgent);
+        installGuidance.textContent = isAppleMobile
+            ? 'No Safari, toque em Compartilhar e escolha "Adicionar à Tela de Início".'
+            : 'Use o menu do navegador e escolha "Instalar aplicativo" ou "Adicionar à tela inicial".';
+        installGuidance.hidden = false;
+    });
+
+    window.addEventListener('appinstalled', hideInstallOption);
 
     if ('serviceWorker' in navigator && location.protocol !== 'file:') {
         window.addEventListener('load', () => {
