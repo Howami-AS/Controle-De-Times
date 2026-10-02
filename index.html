@@ -288,6 +288,21 @@
         font-weight: 600;
     }
 
+    .queue-summary {
+        margin-top: 12px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        background: rgba(37, 99, 235, 0.12);
+        border: 1px solid rgba(37, 99, 235, 0.35);
+        color: var(--text-main);
+        font-size: 0.82rem;
+        line-height: 1.4;
+    }
+
+    .queue-summary strong {
+        color: #bfdbfe;
+    }
+
     .queue-position {
         color: var(--text-muted);
         font-size: 0.9rem;
@@ -734,6 +749,7 @@
             <ul class="queue-list" id="queue-list">
                 <!-- Preenchido via JS -->
             </ul>
+            <div class="queue-summary" id="queue-summary">Nenhum time com sequência atual.</div>
         </div>
 
         <!-- HISTÓRICO SIMPLES -->
@@ -912,6 +928,7 @@
 
             // Renderizar Fila
             const queueListEl = document.getElementById('queue-list');
+            const queueSummaryEl = document.getElementById('queue-summary');
             queueListEl.innerHTML = '';
             if (state.queue.length === 0) {
                 queueListEl.innerHTML = `<li class="queue-item" style="color: var(--text-muted); justify-content: center;">Nenhum time na fila</li>`;
@@ -928,6 +945,19 @@
                         queueListEl.appendChild(li);
                     }
                 });
+            }
+
+            const activeLeader = state.teams.reduce((best, team) => {
+                if (!best || team.consecutiveWins > best.consecutiveWins) {
+                    return team;
+                }
+                return best;
+            }, null);
+
+            if (activeLeader && activeLeader.consecutiveWins > 0) {
+                queueSummaryEl.innerHTML = `🔥 <strong>${activeLeader.name}</strong> está com mais vitórias consecutivas (${activeLeader.consecutiveWins}).`;
+            } else {
+                queueSummaryEl.innerHTML = 'Nenhum time com sequência atual.';
             }
 
             // Renderizar Histórico Recente
