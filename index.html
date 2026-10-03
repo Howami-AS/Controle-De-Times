@@ -158,7 +158,7 @@
     }
 
     .team-name {
-        font-size: 1.1rem;
+        font-size: 2rem;
         font-weight: 700;
         word-break: break-word;
         margin-bottom: 6px;
@@ -547,7 +547,7 @@
         }
 
         .team-name {
-            font-size: 1.1rem;
+            font-size: 1.6rem;
             margin-bottom: 2px;
         }
 
@@ -808,6 +808,7 @@
         court1: null, // ID do time em quadra 1
         court2: null, // ID do time em quadra 2
         queue: [], // Array de IDs de times na fila
+        waitingWinnerId: null,
         matchNumber: 1,
         history: [], // [{ matchNum, winnerName, loserName }]
         historyStateStack: [] // Pilha de estados anteriores para Desfazer real
@@ -830,6 +831,7 @@
             try {
                 const parsed = JSON.parse(saved);
                 state = parsed;
+                state.waitingWinnerId ??= null;
                 if (state.teams && state.teams.length > 0) {
                     // Encontrar maior ID atual para evitar colisão
                     const maxId = Math.max(...state.teams.map(t => t.id), 0);
@@ -1042,6 +1044,7 @@
 
         // O restante vai para a fila
         state.queue = [];
+        state.waitingWinnerId = null;
         for (let i = 2; i < state.teams.length; i++) {
             state.queue.push(state.teams[i].id);
         }
@@ -1079,23 +1082,27 @@
 
         winner.consecutiveWins++;
 
-        // Regra de Vitórias Consecutivas (2 vitórias)
-        if (winner.consecutiveWins >= 2) {
-            // AMBOS SAEM DA QUADRA E VÃO PARA O FINAL DA FILA
-            winner.consecutiveWins = 0; // Zera contador
+        if (state.waitingWinnerId !== null) {
+            const returningWinnerId = state.waitingWinnerId;
+            state.waitingWinnerId = null;
             loser.consecutiveWins = 0;
-
-            state.queue.push(winner.id);
             state.queue.push(loser.id);
 
-            // Os dois próximos da fila entram na quadra
+            if (winnerNum === 1) {
+                state.court2 = returningWinnerId;
+            } else {
+                state.court1 = returningWinnerId;
+            }
+        // Regra de Vitórias Consecutivas (2 vitórias)
+        } else if (winner.consecutiveWins >= 2) {
+            winner.consecutiveWins = 0;
+            loser.consecutiveWins = 0;
+            state.queue.push(loser.id);
+            state.waitingWinnerId = winner.id;
+
             if (state.queue.length >= 2) {
                 state.court1 = state.queue.shift();
                 state.court2 = state.queue.shift();
-            } else if (state.queue.length === 1) {
-                // Fallback caso excepcionalmente haja apenas 1 na fila
-                state.court1 = state.queue.shift();
-                state.court2 = loser.id; // Evitar vazio caso limites incomuns
             }
         } else {
             // AINDA NÃO TEM 2 VITÓRIAS CONSECUTIVAS
@@ -1157,6 +1164,7 @@
                 state.court1 = state.teams[0].id;
                 state.court2 = state.teams[1].id;
                 state.queue = [];
+                state.waitingWinnerId = null;
                 for (let i = 2; i < state.teams.length; i++) {
                     state.queue.push(state.teams[i].id);
                 }
@@ -1219,6 +1227,9 @@
 
     function executeRemoveTeam(teamId) {
         pushHistoryState();
+        if (state.waitingWinnerId === teamId) {
+            state.waitingWinnerId = null;
+        }
         // Remover da fila se estiver lá
         state.queue = state.queue.filter(id => id !== teamId);
 
@@ -1257,6 +1268,7 @@
                     court1: null,
                     court2: null,
                     queue: [],
+                    waitingWinnerId: null,
                     matchNumber: 1,
                     history: [],
                     historyStateStack: []
