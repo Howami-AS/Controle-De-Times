@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fila-de-times-v12';
+const CACHE_NAME = 'fila-de-times-v15';
 const APP_SHELL = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', (event) => {
