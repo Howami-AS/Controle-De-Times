@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rodizio de Times</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0b1220">
 <!-- CSS puro otimizado para mobile-first com design moderno -->
@@ -48,7 +49,10 @@
     }
 
     header {
-        text-align: center;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 8px;
         margin-bottom: 20px;
         padding-top: 10px;
     }
@@ -59,18 +63,34 @@
         color: var(--primary);
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         gap: 8px;
     }
 
-    .subtitle {
-        font-size: 0.95rem;
-        font-weight: 600;
-        color: var(--text-muted);
-        margin-top: 4px;
+    .header-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    .header-actions button {
+        width: 40px;
+        min-height: 40px;
+        padding: 8px;
+        font-size: 1.1rem;
+    }
+
+    .match-number {
+        color: var(--text-main);
+        font-size: 1rem;
+        font-weight: 700;
+        letter-spacing: normal;
     }
 
     .install-option {
+        grid-column: 1 / -1;
         margin: 10px auto 0;
         padding: 10px 14px;
         font-size: 0.95rem;
@@ -81,6 +101,7 @@
     }
 
     .install-guidance {
+        grid-column: 1 / -1;
         max-width: 420px;
         margin: 8px auto 0;
         color: var(--text-muted);
@@ -184,14 +205,24 @@
     /* Result Buttons */
     .actions-grid {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
         gap: 12px;
+        align-items: stretch;
+    }
+
+    .actions-spacer {
+        visibility: hidden;
+        font-weight: 800;
+        font-size: 0.9rem;
     }
 
     .actions-grid button {
+        width: 100%;
         min-height: 76px;
         font-size: 1rem;
         font-weight: 800;
+        border: 2px solid #86efac;
+        box-shadow: 0 0 14px rgba(34, 197, 94, 0.22), 0 4px 10px rgba(22, 163, 74, 0.2);
     }
 
     .actions-grid button.winner-candidate {
@@ -346,7 +377,23 @@
         transition: var(--transition);
     }
 
+    input[type="password"] {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        font-size: 1rem;
+        outline: none;
+        background: var(--card-bg);
+        color: var(--text-main);
+    }
+
     input[type="text"]:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    input[type="password"]:focus {
         border-color: var(--primary);
         box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
     }
@@ -426,6 +473,49 @@
         font-size: 0.9rem;
         color: var(--text-muted);
         margin-bottom: 20px;
+    }
+    .modal-password-group {
+        text-align: left;
+        margin: -8px 0 18px;
+    }
+    .modal-password-group[hidden] {
+        display: none;
+    }
+    .modal-password-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+    .modal-error {
+        color: #fca5a5;
+        font-size: 0.8rem;
+        margin-top: 6px;
+    }
+    .info-modal-content {
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin-bottom: 20px;
+        text-align: left;
+    }
+    .ranking-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 12px;
+    }
+    .ranking-list li {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 12px;
+        background: var(--surface-raised);
+        border-radius: 8px;
+        font-weight: 600;
+    }
+    .ranking-empty {
+        color: var(--text-muted);
     }
     .modal-actions {
         display: grid;
@@ -557,16 +647,16 @@
         }
 
         #main-screen .actions-grid {
-            grid-template-columns: minmax(0, 1fr);
+            grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
             gap: 8px;
         }
 
         #main-screen .actions-grid button {
             min-width: 0;
             min-height: 76px;
-            padding: 12px 6px;
-            font-size: 1rem;
-            gap: 4px;
+            padding: 12px 4px;
+            font-size: 0.8rem;
+            gap: 3px;
             overflow-wrap: anywhere;
         }
 
@@ -687,8 +777,11 @@
 </head>
 <body>
 <header>
-    <h1>🏐 Fila de Times</h1>
-    <div class="subtitle" id="match-counter-label">Partida #1</div>
+    <h1>🏐 Rodizio de Times</h1>
+    <div class="header-actions">
+        <button class="btn-secondary" id="btn-ranking" type="button" aria-label="Ver ranking" title="Ranking">🏆</button>
+        <button class="btn-secondary" id="btn-about" type="button" aria-label="Informações do aplicativo" title="Sobre">ℹ️</button>
+    </div>
     <button class="btn-secondary install-option" id="install-app" type="button">Instalar aplicativo</button>
     <p class="install-guidance" id="install-guidance" aria-live="polite" hidden></p>
 </header>
@@ -716,7 +809,10 @@
     <div id="main-screen" class="screen">
         <!-- EM QUADRA -->
         <div class="card">
-            <div class="section-title">Em Quadra</div>
+            <div class="section-title">
+                <span>Em Quadra</span>
+                <span class="match-number" id="match-counter-label" aria-label="Partida atual">1</span>
+            </div>
             <div class="court-container">
                 <div class="team-box" id="box-team-1">
                     <div class="team-name" id="label-team-1">---</div>
@@ -731,8 +827,9 @@
 
             <div class="section-title" style="margin-top: 16px;">Resultado da Partida</div>
             <div class="actions-grid">
-                <button class="btn-win" id="btn-win-1">🏆 <span id="btn-name-1">Time 1</span> VENCEU</button>
-                <button class="btn-win" id="btn-win-2">🏆 <span id="btn-name-2">Time 2</span> VENCEU</button>
+                <button class="btn-win" id="btn-win-1" aria-label="Marcar Time 1 como vencedor">Vencedor</button>
+                <span class="actions-spacer" aria-hidden="true">VS</span>
+                <button class="btn-win" id="btn-win-2" aria-label="Marcar Time 2 como vencedor">Vencedor</button>
             </div>
         </div>
 
@@ -788,6 +885,11 @@
     <div class="modal-card">
         <div class="modal-title" id="modal-title">Confirmação</div>
         <div class="modal-text" id="modal-text">Deseja realmente prosseguir?</div>
+        <div class="modal-password-group" id="modal-password-group" hidden>
+            <label for="modal-password-input">Digite a senha para confirmar:</label>
+            <input type="password" id="modal-password-input" autocomplete="off">
+            <p class="modal-error" id="modal-password-error" aria-live="polite" hidden>Senha incorreta. Tente novamente.</p>
+        </div>
         <div class="modal-actions">
             <button class="btn-secondary" id="modal-cancel">Cancelar</button>
             <button class="btn-danger" id="modal-confirm">Confirmar</button>
@@ -795,8 +897,16 @@
     </div>
 </div>
 
+<div class="modal-overlay" id="info-modal">
+    <div class="modal-card">
+        <div class="modal-title" id="info-modal-title"></div>
+        <div class="info-modal-content" id="info-modal-content"></div>
+        <button class="btn-secondary" id="info-modal-close" style="width: 100%;">Fechar</button>
+    </div>
+</div>
+
 <footer>
-    ©️ Alisson Salvador 2026
+    © Alisson Salvador 2026
 </footer>
 
 <!-- Lógica da Aplicação com JavaScript Puro -->
@@ -810,7 +920,7 @@
         queue: [], // Array de IDs de times na fila
         waitingWinnerId: null,
         matchNumber: 1,
-        history: [], // [{ matchNum, winnerName, loserName }]
+        history: [], // [{ matchNum, winnerId, winnerName, loserName }]
         historyStateStack: [] // Pilha de estados anteriores para Desfazer real
     };
 
@@ -832,6 +942,9 @@
                 const parsed = JSON.parse(saved);
                 state = parsed;
                 state.waitingWinnerId ??= null;
+                state.teams?.forEach(team => {
+                    team.consecutiveWins ??= 0;
+                });
                 if (state.teams && state.teams.length > 0) {
                     // Encontrar maior ID atual para evitar colisão
                     const maxId = Math.max(...state.teams.map(t => t.id), 0);
@@ -886,7 +999,7 @@
     // Renderizador Geral da Interface
     function render() {
         // Atualizar Contador de Partidas
-        document.getElementById('match-counter-label').innerText = `Partida #${state.matchNumber}`;
+        document.getElementById('match-counter-label').innerText = state.matchNumber;
 
         // 1. Renderizar Tela de Setup
         if (screens.setup.classList.contains('active')) {
@@ -919,13 +1032,13 @@
             document.getElementById('btn-win-2').classList.toggle('winner-candidate', team2HasStreak);
 
             if (t1 && t2) {
-                document.getElementById('label-team-1').innerText = t1.name;
+                document.getElementById('label-team-1').innerText = `${team1HasStreak ? '🔥 ' : ''}${t1.name}`;
                 document.getElementById('wins-team-1').innerText = `Vitórias: ${t1.consecutiveWins}`;
-                document.getElementById('btn-name-1').innerText = t1.name;
+                document.getElementById('btn-win-1').setAttribute('aria-label', `Marcar ${t1.name} como vencedor`);
 
-                document.getElementById('label-team-2').innerText = t2.name;
+                document.getElementById('label-team-2').innerText = `${team2HasStreak ? '🔥 ' : ''}${t2.name}`;
                 document.getElementById('wins-team-2').innerText = `Vitórias: ${t2.consecutiveWins}`;
-                document.getElementById('btn-name-2').innerText = t2.name;
+                document.getElementById('btn-win-2').setAttribute('aria-label', `Marcar ${t2.name} como vencedor`);
             }
 
             // Renderizar Fila
@@ -1076,6 +1189,7 @@
         // Registrar no histórico
         state.history.push({
             matchNum: state.matchNumber,
+            winnerId: winner.id,
             winnerName: winner.name,
             loserName: loser.name
         });
@@ -1087,12 +1201,8 @@
             state.waitingWinnerId = null;
             loser.consecutiveWins = 0;
             state.queue.push(loser.id);
-
-            if (winnerNum === 1) {
-                state.court2 = returningWinnerId;
-            } else {
-                state.court1 = returningWinnerId;
-            }
+            state.court1 = winner.id;
+            state.court2 = returningWinnerId;
         // Regra de Vitórias Consecutivas (2 vitórias)
         } else if (winner.consecutiveWins >= 2) {
             winner.consecutiveWins = 0;
@@ -1114,11 +1224,8 @@
             // O primeiro time disponível da fila entra
             if (state.queue.length > 0) {
                 const nextTeamId = state.queue.shift();
-                if (winnerNum === 1) {
-                    state.court2 = nextTeamId;
-                } else {
-                    state.court1 = nextTeamId;
-                }
+                state.court1 = winner.id;
+                state.court2 = nextTeamId;
             }
         }
 
@@ -1147,7 +1254,7 @@
     document.getElementById('btn-reset').addEventListener('click', () => {
         openModal(
             "Novo Jogo",
-            "Deseja reiniciar a rotação atual e reconstruir a fila com os times cadastrados?",
+            "Para evitar um reinício acidental, confirme a senha e reinicie a rotação.",
             () => {
                 // Reconstruir com os mesmos times atuais
                 const currentNames = state.teams.map(t => t.name);
@@ -1172,7 +1279,8 @@
                 state.history = [];
                 state.historyStateStack = [];
                 render();
-            }
+            },
+            true
         );
     });
 
@@ -1283,22 +1391,111 @@
     let modalCallback = null;
     const modalOverlay = document.getElementById('confirm-modal');
 
-    function openModal(title, text, callback) {
+    let modalRequiresPassword = false;
+
+    function openModal(title, text, callback, requirePassword = false) {
         document.getElementById('modal-title').innerText = title;
         document.getElementById('modal-text').innerText = text;
+        const passwordGroup = document.getElementById('modal-password-group');
+        const passwordInput = document.getElementById('modal-password-input');
+        const passwordError = document.getElementById('modal-password-error');
+        modalRequiresPassword = requirePassword;
+        passwordGroup.hidden = !requirePassword;
+        passwordInput.value = '';
+        passwordError.hidden = true;
         modalCallback = callback;
         modalOverlay.classList.add('active');
+        if (requirePassword) passwordInput.focus();
     }
 
-    document.getElementById('modal-cancel').addEventListener('click', () => {
+    function closeConfirmModal() {
         modalOverlay.classList.remove('active');
         modalCallback = null;
-    });
+        modalRequiresPassword = false;
+        document.getElementById('modal-password-input').value = '';
+    }
+
+    document.getElementById('modal-cancel').addEventListener('click', closeConfirmModal);
 
     document.getElementById('modal-confirm').addEventListener('click', () => {
+        if (modalRequiresPassword) {
+            const passwordInput = document.getElementById('modal-password-input');
+            if (passwordInput.value !== 'Boratime') {
+                document.getElementById('modal-password-error').hidden = false;
+                passwordInput.focus();
+                return;
+            }
+        }
         if (modalCallback) modalCallback();
-        modalOverlay.classList.remove('active');
-        modalCallback = null;
+        closeConfirmModal();
+    });
+
+    document.getElementById('modal-password-input').addEventListener('keypress', (event) => {
+        if (event.key === 'Enter') document.getElementById('modal-confirm').click();
+    });
+
+    const infoModal = document.getElementById('info-modal');
+
+    function openInfoModal(title, content) {
+        document.getElementById('info-modal-title').innerText = title;
+        const contentElement = document.getElementById('info-modal-content');
+        contentElement.replaceChildren();
+        if (typeof content === 'string') {
+            contentElement.innerText = content;
+        } else {
+            contentElement.appendChild(content);
+        }
+        infoModal.classList.add('active');
+    }
+
+    document.getElementById('btn-ranking').addEventListener('click', () => {
+        const winsByTeam = new Map();
+        state.history.forEach(match => {
+            const key = match.winnerId ?? `name:${match.winnerName}`;
+            const current = winsByTeam.get(key) || { name: match.winnerName, wins: 0 };
+            current.wins++;
+            winsByTeam.set(key, current);
+        });
+
+        const ranking = [...winsByTeam.values()]
+            .sort((a, b) => b.wins - a.wins || a.name.localeCompare(b.name, 'pt-BR'))
+            .slice(0, 3);
+        const rankingList = document.createElement('ol');
+        rankingList.className = 'ranking-list';
+
+        if (ranking.length === 0) {
+            const emptyMessage = document.createElement('p');
+            emptyMessage.className = 'ranking-empty';
+            emptyMessage.innerText = 'Ainda não há vitórias registradas nesta rotação.';
+            openInfoModal('🏆 Ranking de Vitórias', emptyMessage);
+            return;
+        }
+
+        ranking.forEach((team, index) => {
+            const item = document.createElement('li');
+            const teamLabel = document.createElement('span');
+            const winsLabel = document.createElement('span');
+            teamLabel.innerText = `${index + 1}º ${team.name}`;
+            winsLabel.innerText = `🔥 ${team.wins} ${team.wins === 1 ? 'vitória' : 'vitórias'}`;
+            item.append(teamLabel, winsLabel);
+            rankingList.appendChild(item);
+        });
+        openInfoModal('🏆 Ranking de Vitórias', rankingList);
+    });
+
+    document.getElementById('btn-about').addEventListener('click', () => {
+        const about = document.createElement('div');
+        const appDescription = document.createElement('p');
+        appDescription.innerText = 'Rodizio de Times — aplicativo para organizar equipes, partidas e a rotação da fila.';
+        const developer = document.createElement('p');
+        developer.style.marginTop = '12px';
+        developer.innerText = '© Alisson Salvador 2026';
+        about.append(appDescription, developer);
+        openInfoModal('ℹ️ Sobre o aplicativo', about);
+    });
+
+    document.getElementById('info-modal-close').addEventListener('click', () => {
+        infoModal.classList.remove('active');
     });
 
     let installPromptEvent = null;
