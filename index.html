@@ -1456,17 +1456,25 @@
     }
 
     document.getElementById('btn-ranking').addEventListener('click', () => {
-        const winsByTeam = new Map();
-        state.history.forEach(match => {
-            const key = match.winnerId ?? `name:${match.winnerName}`;
-            const current = winsByTeam.get(key) || { name: match.winnerName, wins: 0 };
-            current.wins++;
-            winsByTeam.set(key, current);
+        const rankingMap = new Map();
+        state.teams.forEach(team => {
+            rankingMap.set(team.id, { id: team.id, name: team.name, wins: 0 });
         });
 
-        const ranking = [...winsByTeam.values()]
-            .sort((a, b) => b.wins - a.wins || a.name.localeCompare(b.name, 'pt-BR'))
-            .slice(0, 3);
+        state.history.forEach(match => {
+            const key = match.winnerId ?? `name:${match.winnerName}`;
+            const current = rankingMap.get(key) || { id: key, name: match.winnerName, wins: 0 };
+            current.wins++;
+            rankingMap.set(key, current);
+        });
+
+        const ranking = [...rankingMap.values()]
+            .sort((a, b) => b.wins - a.wins || a.name.localeCompare(b.name, 'pt-BR'));
+
+        const rankingSummary = document.createElement('p');
+        rankingSummary.className = 'ranking-empty';
+        rankingSummary.innerText = `Total de times: ${state.teams.length}`;
+
         const rankingList = document.createElement('ol');
         rankingList.className = 'ranking-list';
 
@@ -1474,20 +1482,38 @@
             const emptyMessage = document.createElement('p');
             emptyMessage.className = 'ranking-empty';
             emptyMessage.innerText = 'Ainda não há vitórias registradas nesta rotação.';
-            openInfoModal('🏆 Ranking de Vitórias', emptyMessage);
+            openInfoModal('🏆 Ranking de Vitórias', [rankingSummary, emptyMessage]);
             return;
         }
+
+        const podiumStyles = [
+            { background: 'linear-gradient(135deg, rgba(250, 204, 21, 0.18), rgba(30, 41, 59, 0.9))', border: 'rgba(250, 204, 21, 0.7)' },
+            { background: 'linear-gradient(135deg, rgba(148, 163, 184, 0.18), rgba(30, 41, 59, 0.9))', border: 'rgba(148, 163, 184, 0.7)' },
+            { background: 'linear-gradient(135deg, rgba(251, 146, 60, 0.18), rgba(30, 41, 59, 0.9))', border: 'rgba(251, 146, 60, 0.7)' }
+        ];
 
         ranking.forEach((team, index) => {
             const item = document.createElement('li');
             const teamLabel = document.createElement('span');
             const winsLabel = document.createElement('span');
+            const podiumIndex = index < 3 ? index : -1;
+            const medal = ['🥇', '🥈', '🥉'][index] || '🏅';
+
+            if (podiumIndex >= 0) {
+                item.style.background = podiumStyles[podiumIndex].background;
+                item.style.border = `1px solid ${podiumStyles[podiumIndex].border}`;
+                item.style.fontWeight = '700';
+            }
+
             teamLabel.innerText = `${index + 1}º ${team.name}`;
-            winsLabel.innerText = `🔥 ${team.wins} ${team.wins === 1 ? 'vitória' : 'vitórias'}`;
+            winsLabel.innerText = `${medal} ${team.wins} ${team.wins === 1 ? 'vitória' : 'vitórias'}`;
             item.append(teamLabel, winsLabel);
             rankingList.appendChild(item);
         });
-        openInfoModal('🏆 Ranking de Vitórias', rankingList);
+
+        const rankingContainer = document.createElement('div');
+        rankingContainer.append(rankingSummary, rankingList);
+        openInfoModal('🏆 Ranking de Vitórias', rankingContainer);
     });
 
     document.getElementById('btn-about').addEventListener('click', () => {
