@@ -913,6 +913,7 @@
     <div class="modal-card">
         <div class="modal-title" id="info-modal-title"></div>
         <div class="info-modal-content" id="info-modal-content"></div>
+        <button class="btn-secondary" id="info-modal-share" type="button" style="width: 100%; margin-bottom: 10px;" hidden>📤 Compartilhar ranking</button>
         <button class="btn-secondary" id="info-modal-close" style="width: 100%;">Fechar</button>
     </div>
 </div>
@@ -1443,10 +1444,14 @@
 
     const infoModal = document.getElementById('info-modal');
 
-    function openInfoModal(title, content) {
+    function openInfoModal(title, content, shareText = '') {
         document.getElementById('info-modal-title').innerText = title;
         const contentElement = document.getElementById('info-modal-content');
+        const shareButton = document.getElementById('info-modal-share');
         contentElement.replaceChildren();
+        shareButton.hidden = !shareText;
+        shareButton.dataset.shareText = shareText;
+        shareButton.innerText = '📤 Compartilhar ranking';
         if (typeof content === 'string') {
             contentElement.innerText = content;
         } else {
@@ -1454,6 +1459,34 @@
         }
         infoModal.classList.add('active');
     }
+
+    document.getElementById('info-modal-share').addEventListener('click', async (event) => {
+        const button = event.currentTarget;
+        const shareData = {
+            title: '🏆 Ranking de Vitórias',
+            text: button.dataset.shareText
+        };
+
+        try {
+            if (navigator.share) {
+                await navigator.share(shareData);
+                return;
+            }
+
+            await navigator.clipboard.writeText(shareData.text);
+            button.innerText = '✅ Ranking copiado!';
+            window.setTimeout(() => {
+                button.innerText = '📤 Compartilhar ranking';
+            }, 2000);
+        } catch (error) {
+            if (error.name !== 'AbortError') {
+                button.innerText = 'Não foi possível compartilhar';
+                window.setTimeout(() => {
+                    button.innerText = '📤 Compartilhar ranking';
+                }, 2500);
+            }
+        }
+    });
 
     document.getElementById('btn-ranking').addEventListener('click', () => {
         const rankingMap = new Map();
@@ -1482,7 +1515,8 @@
             const emptyMessage = document.createElement('p');
             emptyMessage.className = 'ranking-empty';
             emptyMessage.innerText = 'Ainda não há vitórias registradas nesta rotação.';
-            openInfoModal('🏆 Ranking de Vitórias', [rankingSummary, emptyMessage]);
+            const shareText = `🏆 Ranking de Vitórias\nTotal de times: ${state.teams.length}\nAinda não há vitórias registradas nesta rotação.`;
+            openInfoModal('🏆 Ranking de Vitórias', [rankingSummary, emptyMessage], shareText);
             return;
         }
 
@@ -1513,7 +1547,12 @@
 
         const rankingContainer = document.createElement('div');
         rankingContainer.append(rankingSummary, rankingList);
-        openInfoModal('🏆 Ranking de Vitórias', rankingContainer);
+        const shareLines = ranking.map((team, index) => {
+            const medal = ['🥇', '🥈', '🥉'][index] || '🏅';
+            return `${index + 1}º ${team.name} — ${medal} ${team.wins} ${team.wins === 1 ? 'vitória' : 'vitórias'}`;
+        });
+        const shareText = `🏆 Ranking de Vitórias\nTotal de times: ${state.teams.length}\n\n${shareLines.join('\n')}`;
+        openInfoModal('🏆 Ranking de Vitórias', rankingContainer, shareText);
     });
 
     document.getElementById('btn-about').addEventListener('click', () => {
