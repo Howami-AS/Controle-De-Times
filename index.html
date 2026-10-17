@@ -404,6 +404,14 @@
         font-weight: 600;
     }
 
+    .manage-team-actions { display: flex; align-items: center; gap: 4px; }
+    .manage-team-type { color: var(--text-muted); font-size: 0.7rem; font-weight: 500; }
+    .manage-type-options { display: flex; gap: 8px; margin: 6px 0 10px; }
+    .manage-type-option { flex: 1; border: 1px solid var(--border); background: var(--surface-raised); color: var(--text-main); }
+    .manage-type-option[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: white; }
+    .manage-type-status { margin: 0 0 8px; color: var(--text-muted); font-size: 0.85rem; }
+    .manage-count { margin: 0 0 8px; color: var(--text-muted); font-size: 0.85rem; }
+
     .icon-btn {
         background: none;
         border: none;
@@ -804,12 +812,16 @@
     <div id="setup-screen" class="screen active">
         <div class="card">
             <div class="section-title">Configurar Nova Rotação</div>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
+            <div class="manage-type-options" role="group" aria-label="O que vai jogar?">
+                <button class="manage-type-option" type="button" data-setup-type="time" aria-pressed="true">Time</button>
+                <button class="manage-type-option" type="button" data-setup-type="dupla" aria-pressed="false">Dupla</button>
+            </div>
+            <p id="setup-guidance" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
                 Adicione pelo menos 3 times para iniciar a rotação automática.
             </p>
             <div class="input-group">
-                <input type="text" id="new-team-input" placeholder="Nome do time (ex: Time 1)" autocomplete="off">
-                <button class="btn-primary" id="btn-add-setup" style="padding: 12px 16px;">+ Adicionar</button>
+                <input type="text" id="new-team-input" placeholder="Nome do time" autocomplete="off">
+                <button class="btn-primary" id="btn-add-setup" style="padding: 12px 16px;">+ Adicionar Time</button>
             </div>
             <ul class="setup-teams-list" id="setup-teams-list">
                 <!-- Preenchido via JS -->
@@ -873,14 +885,21 @@
     <!-- TELA 3: GERENCIAMENTO DE TIMES EM ANDAMENTO -->
     <div id="manage-screen" class="screen">
         <div class="card">
-            <div class="section-title">Gerenciar Times</div>
-            <div class="input-group">
-                <input type="text" id="manage-team-input" placeholder="Novo time durante o jogo" autocomplete="off">
-                <button class="btn-primary" id="btn-add-manage" style="padding: 12px 16px;">+ Adicionar</button>
+            <div class="section-title" id="manage-title">Gerenciar Times</div>
+            <div style="font-size: 0.85rem; color: var(--text-muted);">O que vai jogar?</div>
+            <div class="manage-type-options" role="group" aria-label="Tipo de participante">
+                <button class="manage-type-option" type="button" data-team-type="time" aria-pressed="true">Time</button>
+                <button class="manage-type-option" type="button" data-team-type="dupla" aria-pressed="false">Dupla</button>
             </div>
-            <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
+            <div class="manage-type-status" id="manage-type-status" aria-live="polite">Time jogando</div>
+            <div class="input-group">
+                <input type="text" id="manage-team-input" placeholder="Nome do time" autocomplete="off">
+                <button class="btn-primary" id="btn-add-manage" style="padding: 12px 16px;">+ Adicionar Time</button>
+            </div>
+            <div id="manage-queue-note" style="font-size: 0.8rem; color: var(--text-muted); margin: 8px 0 12px;">
                 Novos times entram automaticamente no final da fila.
             </div>
+            <div class="manage-count" id="manage-count" aria-live="polite">Times cadastrados: 0</div>
             <ul class="setup-teams-list" id="manage-teams-list" style="margin-bottom: 16px;">
                 <!-- Preenchido via JS -->
             </ul>
@@ -927,6 +946,7 @@
     // Estado Global da Aplicação
     let state = {
         setupTeams: ["Time 1", "Time 2", "Time 3", "Time 4"],
+        setupType: 'time',
         teams: [], // { id, name, consecutiveWins }
         court1: null, // ID do time em quadra 1
         court2: null, // ID do time em quadra 2
@@ -954,9 +974,11 @@
             try {
                 const parsed = JSON.parse(saved);
                 state = parsed;
+                state.setupType ??= 'time';
                 state.waitingWinnerId ??= null;
                 state.teams?.forEach(team => {
                     team.consecutiveWins ??= 0;
+                    team.type ??= 'time';
                 });
                 if (state.teams && state.teams.length > 0) {
                     // Encontrar maior ID atual para evitar colisão
@@ -1006,6 +1028,7 @@
 
     // Resetar setup para valores padrão
     function resetSetupDefaults() {
+        state.setupType = 'time';
         state.setupTeams = ["Time 1", "Time 2", "Time 3", "Time 4"];
     }
 
@@ -1016,6 +1039,17 @@
 
         // 1. Renderizar Tela de Setup
         if (screens.setup.classList.contains('active')) {
+            const setupIsDuo = state.setupType === 'dupla';
+            const setupLabel = setupIsDuo ? 'dupla' : 'time';
+            document.querySelectorAll('[data-setup-type]').forEach(button => {
+                button.setAttribute('aria-pressed', String(button.dataset.setupType === state.setupType));
+            });
+            document.getElementById('setup-guidance').innerText = `Adicione pelo menos 3 ${setupIsDuo ? 'duplas' : 'times'} para iniciar a rotação automática.`;
+            document.getElementById('new-team-input').placeholder = `Nome do ${setupLabel}`;
+            document.getElementById('btn-add-setup').innerText = `+ Adicionar ${setupIsDuo ? 'Dupla' : 'Time'}`;
+            if (!document.getElementById('new-team-input').value) {
+                document.getElementById('new-team-input').value = nextSetupParticipantName();
+            }
             const setupListEl = document.getElementById('setup-teams-list');
             setupListEl.innerHTML = '';
             state.setupTeams.forEach((name, index) => {
@@ -1095,9 +1129,12 @@
         if (screens.manage.classList.contains('active')) {
             const manageListEl = document.getElementById('manage-teams-list');
             manageListEl.innerHTML = '';
+            const managedType = currentManageTeamType || 'time';
+            const visibleTeams = state.teams.filter(team => (team.type || 'time') === managedType);
+            document.getElementById('manage-count').innerText = `${managedType === 'dupla' ? 'Duplas' : 'Times'} cadastradas: ${visibleTeams.length}`;
             
-            // Mostrar todos os times atuais com indicação de onde estão
-            state.teams.forEach(team => {
+            // Mostrar participantes da categoria selecionada, com indicação de onde estão
+            visibleTeams.forEach(team => {
                 let statusBadge = "Na Fila";
                 if (team.id === state.court1 || team.id === state.court2) {
                     statusBadge = "Em Quadra ⚡";
@@ -1106,10 +1143,13 @@
                 li.className = 'setup-team-item';
                 li.innerHTML = `
                     <div>
-                        <strong>${team.name}</strong>
+                        <strong>${team.name} <span class="manage-team-type">${team.type === 'dupla' ? 'Dupla' : 'Time'}</span></strong>
                         <div style="font-size: 0.7rem; color: var(--text-muted);">${statusBadge}</div>
                     </div>
-                    <button class="icon-btn" onclick="requestRemoveTeam(${team.id}, '${team.name}')">🗑️</button>
+                    <div class="manage-team-actions">
+                        <button class="icon-btn" style="color: var(--primary);" onclick="editTeam(${team.id})" aria-label="Editar ${team.name}" title="Editar">✏️</button>
+                        <button class="icon-btn" onclick="requestRemoveTeam(${team.id}, '${team.name.replaceAll("'", "\\'")}')" aria-label="Remover ${team.name}" title="Remover">🗑️</button>
+                    </div>
                 `;
                 manageListEl.appendChild(li);
             });
@@ -1119,12 +1159,36 @@
     }
 
     // --- FUNÇÕES DE SETUP ---
+    function nextSetupParticipantName() {
+        const label = state.setupType === 'dupla' ? 'Dupla' : 'Time';
+        const highestNumber = state.setupTeams.reduce((highest, name) => {
+            const match = name.match(new RegExp(`^${label}\\s+(\\d+)$`, 'i'));
+            return match ? Math.max(highest, Number(match[1])) : highest;
+        }, 0);
+        return `${label} ${Math.max(state.setupTeams.length, highestNumber) + 1}`;
+    }
+
+    function selectSetupType(type) {
+        if (state.setupType !== type) {
+            const oldLabel = state.setupType === 'dupla' ? 'Dupla' : 'Time';
+            const newLabel = type === 'dupla' ? 'Dupla' : 'Time';
+            state.setupTeams = state.setupTeams.map(name => name.replace(new RegExp(`^${oldLabel}(?=\\s+\\d+$)`, 'i'), newLabel));
+            state.setupType = type;
+        }
+        document.getElementById('new-team-input').value = nextSetupParticipantName();
+        render();
+    }
+
+    document.querySelectorAll('[data-setup-type]').forEach(button => {
+        button.addEventListener('click', () => selectSetupType(button.dataset.setupType));
+    });
+
     document.getElementById('btn-add-setup').addEventListener('click', () => {
         const input = document.getElementById('new-team-input');
         const val = input.value.trim();
         if (val) {
             state.setupTeams.push(val);
-            input.value = '';
+            input.value = nextSetupParticipantName();
             render();
         }
     });
@@ -1137,6 +1201,7 @@
 
     window.removeSetupTeam = function(index) {
         state.setupTeams.splice(index, 1);
+        document.getElementById('new-team-input').value = nextSetupParticipantName();
         render();
     };
 
@@ -1147,6 +1212,7 @@
         state.teams = state.setupTeams.map((name) => ({
             id: nextId++,
             name: name,
+            type: state.setupType,
             consecutiveWins: 0
         }));
 
@@ -1293,6 +1359,7 @@
 
     document.getElementById('btn-manage').addEventListener('click', () => {
         showScreen('manage');
+        selectManageTeamType(currentManageTeamType);
         render();
     });
 
@@ -1302,20 +1369,76 @@
     });
 
     // --- GERENCIAMENTO DE TIMES EM ANDAMENTO ---
+    let editingTeamId = null;
+    let currentManageTeamType = 'time';
+    function nextParticipantName(type) {
+        const label = type === 'dupla' ? 'Dupla' : 'Time';
+        const participants = state.teams.filter(team => (team.type || 'time') === type);
+        const highestNumber = participants.reduce((highest, team) => {
+            const match = team.name.match(new RegExp(`^${label}\\s+(\\d+)$`, 'i'));
+            return match ? Math.max(highest, Number(match[1])) : highest;
+        }, 0);
+        return `${label} ${Math.max(participants.length, highestNumber) + 1}`;
+    }
+
+    function selectManageTeamType(type) {
+        currentManageTeamType = type;
+        document.querySelectorAll('.manage-type-option').forEach(button => {
+            button.setAttribute('aria-pressed', String(button.dataset.teamType === type));
+        });
+        const isDuo = type === 'dupla';
+        document.getElementById('manage-title').innerText = `Gerenciar ${isDuo ? 'Duplas' : 'Times'}`;
+        document.getElementById('manage-type-status').innerText = `${isDuo ? 'Dupla' : 'Time'} jogando`;
+        document.getElementById('manage-team-input').placeholder = isDuo ? 'Nome da dupla' : 'Nome do time';
+        document.getElementById('manage-queue-note').innerText = `Novas ${isDuo ? 'duplas' : 'times'} entram automaticamente no final da fila.`;
+        if (editingTeamId === null) {
+            document.getElementById('btn-add-manage').innerText = `+ Adicionar ${isDuo ? 'Dupla' : 'Time'}`;
+            document.getElementById('manage-team-input').value = nextParticipantName(type);
+        }
+        if (screens.manage.classList.contains('active')) render();
+    }
+    document.querySelectorAll('.manage-type-option').forEach(button => {
+        button.addEventListener('click', () => selectManageTeamType(button.dataset.teamType));
+    });
+    selectManageTeamType('time');
+    window.editTeam = function(teamId) {
+        const team = state.teams.find(item => item.id === teamId);
+        if (!team) return;
+        editingTeamId = teamId;
+        document.getElementById('manage-team-input').value = team.name;
+        selectManageTeamType(team.type || 'time');
+        document.getElementById('btn-add-manage').innerText = `Salvar ${team.type === 'dupla' ? 'Dupla' : 'Time'}`;
+        document.getElementById('manage-team-input').focus();
+    };
+
     document.getElementById('btn-add-manage').addEventListener('click', () => {
         const input = document.getElementById('manage-team-input');
         const val = input.value.trim();
         if (val) {
             pushHistoryState();
-            const newTeam = {
-                id: nextId++,
-                name: val,
-                consecutiveWins: 0
-            };
-            state.teams.push(newTeam);
-            // Colocar no final da fila conforme regra
-            state.queue.push(newTeam.id);
-            input.value = '';
+            if (editingTeamId !== null) {
+                const team = state.teams.find(item => item.id === editingTeamId);
+                if (team) {
+                    team.name = val;
+                    team.type = currentManageTeamType;
+                    state.history.forEach(match => {
+                        if (match.winnerId === team.id) match.winnerName = val;
+                        if (match.loserId === team.id) match.loserName = val;
+                    });
+                }
+                editingTeamId = null;
+                document.getElementById('btn-add-manage').innerText = `+ Adicionar ${currentManageTeamType === 'dupla' ? 'Dupla' : 'Time'}`;
+            } else {
+                const newTeam = {
+                    id: nextId++,
+                    name: val,
+                    type: currentManageTeamType,
+                    consecutiveWins: 0
+                };
+                state.teams.push(newTeam);
+                state.queue.push(newTeam.id);
+            }
+            input.value = nextParticipantName(currentManageTeamType);
             render();
         }
     });
@@ -1328,11 +1451,12 @@
 
     let teamToRemoveId = null;
     window.requestRemoveTeam = function(teamId, teamName) {
+        const isDuo = state.teams.find(team => team.id === teamId)?.type === 'dupla';
         // Verificar se o time está em quadra
         if (teamId === state.court1 || teamId === state.court2) {
             openModal(
-                "Remover Time em Quadra",
-                `O time "${teamName}" está jogando no momento. Tem certeza que deseja removê-lo?`,
+                isDuo ? "Remover Dupla em Quadra" : "Remover Time em Quadra",
+                `A ${isDuo ? 'dupla' : 'time'} "${teamName}" está jogando no momento. Tem certeza que deseja removê-la?`,
                 () => executeRemoveTeam(teamId)
             );
         } else {
@@ -1379,6 +1503,7 @@
                 resetSetupDefaults();
                 state = {
                     setupTeams: ["Time 1", "Time 2", "Time 3", "Time 4"],
+                    setupType: 'time',
                     teams: [],
                     court1: null,
                     court2: null,
@@ -1388,6 +1513,7 @@
                     history: [],
                     historyStateStack: []
                 };
+                document.getElementById('new-team-input').value = '';
                 showScreen('setup');
                 render();
             }
