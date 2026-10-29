@@ -538,7 +538,7 @@
         .screen#main-screen.active {
             display: grid;
             grid-template-columns: minmax(0, 1fr);
-            grid-template-rows: auto auto minmax(195px, 0.9fr) minmax(120px, 1.1fr);
+            grid-template-rows: auto auto auto auto;
             align-content: start;
             height: 100%;
             overflow-y: auto;
@@ -571,7 +571,9 @@
         }
 
         #main-screen .queue-list {
-            min-height: 142px;
+            flex: 0 0 auto;
+            min-height: 0;
+            overflow: visible;
         }
     }
 
@@ -614,8 +616,8 @@
         .screen#main-screen.active {
             display: grid;
             grid-template-columns: minmax(0, 1fr);
-            grid-template-rows: auto auto minmax(170px, 0.9fr) minmax(120px, 1.1fr);
-            align-content: stretch;
+            grid-template-rows: auto auto auto auto;
+            align-content: start;
             height: 100%;
             overflow-y: auto;
             overscroll-behavior: contain;
@@ -704,10 +706,10 @@
         }
 
         #main-screen .queue-list {
-            flex: 1;
-            min-height: 118px;
+            flex: 0 0 auto;
+            min-height: 0;
             max-height: none;
-            overflow: auto;
+            overflow: visible;
             scrollbar-width: none;
         }
 
@@ -1091,7 +1093,20 @@
             // Renderizar Fila
             const queueListEl = document.getElementById('queue-list');
             queueListEl.innerHTML = '';
-            if (state.queue.length === 0) {
+            const waitingTeam = state.teams.find(t => t.id === state.waitingWinnerId);
+            if (waitingTeam) {
+                const li = document.createElement('li');
+                li.className = 'queue-item';
+                const name = document.createElement('span');
+                name.innerText = waitingTeam.name;
+                const status = document.createElement('span');
+                status.className = 'queue-position';
+                status.innerText = 'Aguardando resultado';
+                li.append(name, status);
+                queueListEl.appendChild(li);
+            }
+
+            if (state.queue.length === 0 && !waitingTeam) {
                 queueListEl.innerHTML = `<li class="queue-item" style="color: var(--text-muted); justify-content: center;">Nenhum time na fila</li>`;
             } else {
                 state.queue.forEach((id, idx) => {
