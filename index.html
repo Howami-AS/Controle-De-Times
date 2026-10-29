@@ -1101,7 +1101,7 @@
                 name.innerText = waitingTeam.name;
                 const status = document.createElement('span');
                 status.className = 'queue-position';
-                status.innerText = 'Aguardando resultado';
+                status.innerText = 'Venceu 2x';
                 li.append(name, status);
                 queueListEl.appendChild(li);
             }
@@ -1116,7 +1116,7 @@
                         li.className = 'queue-item';
                         li.innerHTML = `
                             <span>${team.name}</span>
-                            <span class="queue-position">${idx + 1}º lugar</span>
+                            <span class="queue-position">${idx + (waitingTeam ? 2 : 1)}º lugar</span>
                         `;
                         queueListEl.appendChild(li);
                     }
