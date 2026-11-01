@@ -185,6 +185,14 @@
         margin-bottom: 6px;
     }
 
+    .team-roster {
+        margin: 0 0 8px;
+        color: var(--text-muted);
+        font-size: 0.8rem;
+        line-height: 1.4;
+        overflow-wrap: anywhere;
+    }
+
     .team-wins {
         font-size: 0.85rem;
         color: var(--text-muted);
@@ -510,6 +518,169 @@
     .ranking-empty {
         color: var(--text-muted);
     }
+    .main-shortcuts {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+    .main-shortcuts button {
+        width: 100%;
+    }
+    .draw-screen {
+        min-height: 0;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+    .draw-description,
+    .draw-status {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        line-height: 1.45;
+    }
+    .draw-names-input {
+        width: 100%;
+        min-height: 150px;
+        margin: 12px 0;
+        padding: 12px 16px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: var(--card-bg);
+        color: var(--text-main);
+        font: inherit;
+        line-height: 1.5;
+        resize: vertical;
+    }
+    .draw-names-input:focus,
+    .draw-player-input:focus {
+        border-color: var(--primary);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    .draw-status {
+        min-height: 1.4em;
+        margin-top: 8px;
+    }
+    .draw-team-list {
+        display: grid;
+        gap: 12px;
+        list-style: none;
+    }
+    .draw-result-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        margin-top: 12px;
+    }
+    .draw-result-actions button {
+        min-width: 0;
+        padding: 12px 8px;
+    }
+    .draw-team-card {
+        background: var(--surface-raised);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 14px;
+    }
+    .draw-team-heading,
+    .draw-player-row,
+    .draw-player-edit,
+    .draw-add-player {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .draw-team-heading {
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+    .draw-team-heading h3 {
+        font-size: 1rem;
+    }
+    .draw-player-list {
+        display: grid;
+        gap: 8px;
+        list-style: none;
+    }
+    .draw-player-row {
+        flex-wrap: wrap;
+        justify-content: space-between;
+        padding: 8px;
+        border-radius: 8px;
+        background: var(--card-bg);
+    }
+    .draw-player-name {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        font-weight: 600;
+    }
+    .draw-player-name-input {
+        min-width: 0;
+        flex: 1;
+        padding: 8px 10px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--surface-raised);
+        color: var(--text-main);
+        font: inherit;
+    }
+    .draw-player-actions {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .draw-player-actions .icon-btn {
+        color: var(--primary);
+    }
+    .draw-player-actions .icon-btn.delete-player-button {
+        color: var(--danger);
+    }
+    .setter-badge {
+        color: #fbbf24;
+        font-size: 0.8rem;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+    .draw-player-edit {
+        flex-wrap: wrap;
+        margin-left: auto;
+    }
+    .draw-player-edit select {
+        max-width: 180px;
+        min-height: 38px;
+        padding: 6px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--surface-raised);
+        color: var(--text-main);
+    }
+    .draw-player-edit button,
+    .draw-add-player button,
+    .setter-button {
+        padding: 8px 10px;
+        font-size: 0.8rem;
+    }
+    .setter-button {
+        flex: 0 0 auto;
+        color: var(--text-main);
+        background: var(--surface-hover);
+    }
+    .draw-add-player {
+        margin-top: 10px;
+    }
+    .draw-player-input {
+        min-width: 0;
+        flex: 1;
+        padding: 9px 10px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--card-bg);
+        color: var(--text-main);
+        font: inherit;
+    }
+    .draw-empty-team {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+    }
     .modal-actions {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -538,7 +709,7 @@
         .screen#main-screen.active {
             display: grid;
             grid-template-columns: minmax(0, 1fr);
-            grid-template-rows: auto auto auto auto;
+            grid-template-rows: repeat(5, auto);
             align-content: start;
             height: 100%;
             overflow-y: auto;
@@ -555,8 +726,8 @@
             padding: 16px;
         }
 
-        #main-screen > .card:nth-child(3),
-        #main-screen > .card:nth-child(4) {
+        #main-screen > .card:nth-child(4),
+        #main-screen > .card:nth-child(5) {
             display: flex;
             flex-direction: column;
             min-height: 0;
@@ -616,7 +787,7 @@
         .screen#main-screen.active {
             display: grid;
             grid-template-columns: minmax(0, 1fr);
-            grid-template-rows: auto auto auto auto;
+            grid-template-rows: repeat(5, auto);
             align-content: start;
             height: 100%;
             overflow-y: auto;
@@ -632,8 +803,8 @@
             padding: 8px;
         }
 
-        #main-screen > .card:nth-child(3),
-        #main-screen > .card:nth-child(4) {
+        #main-screen > .card:nth-child(4),
+        #main-screen > .card:nth-child(5) {
             display: flex;
             flex-direction: column;
             min-width: 0;
@@ -699,8 +870,8 @@
             gap: 4px;
         }
 
-        #main-screen > .card:nth-child(3) .section-title,
-        #main-screen > .card:nth-child(4) .section-title {
+        #main-screen > .card:nth-child(4) .section-title,
+        #main-screen > .card:nth-child(5) .section-title {
             min-height: 2.2em;
             align-items: flex-start;
         }
@@ -766,7 +937,8 @@
         }
 
         #setup-screen.active,
-        #manage-screen.active {
+        #manage-screen.active,
+        #draw-screen.active {
             flex: 1;
         }
 
@@ -777,6 +949,10 @@
             flex-direction: column;
             min-height: 0;
             overflow: hidden;
+            padding: 12px;
+        }
+
+        #draw-screen > .card {
             padding: 12px;
         }
 
@@ -843,11 +1019,13 @@
             <div class="court-container">
                 <div class="team-box" id="box-team-1">
                     <div class="team-name" id="label-team-1">---</div>
+                    <div class="team-roster" id="roster-team-1" hidden></div>
                     <div class="team-wins" id="wins-team-1">Vitórias: 0</div>
                 </div>
                 <div class="vs-badge">VS</div>
                 <div class="team-box" id="box-team-2">
                     <div class="team-name" id="label-team-2">---</div>
+                    <div class="team-roster" id="roster-team-2" hidden></div>
                     <div class="team-wins" id="wins-team-2">Vitórias: 0</div>
                 </div>
             </div>
@@ -867,6 +1045,10 @@
             <button class="btn-secondary" id="btn-manage">⚙️ Gerenciar</button>
         </div>
 
+        <div class="main-shortcuts">
+            <button class="btn-primary" id="btn-open-draw" type="button">🎲 Sortear times</button>
+        </div>
+
         <!-- PRÓXIMOS (FILA) -->
         <div class="card">
             <div class="section-title">Próximos na Fila</div>
@@ -882,6 +1064,27 @@
                 <!-- Preenchido via JS -->
             </ul>
         </div>
+
+    </div>
+
+    <!-- TELA DE SORTEIO DE TIMES -->
+    <div id="draw-screen" class="screen draw-screen">
+        <div class="card">
+            <div class="section-title">🎲 Sorteio de Times</div>
+            <p class="draw-description">Cole ou digite um nome por linha (também aceitamos nomes separados por vírgula ou ponto e vírgula). Numeração, pontuação e emojis serão ignorados. Cada time terá até 4 pessoas; os nomes restantes formam um time menor.</p>
+            <textarea class="draw-names-input" id="draw-names-input" placeholder="Exemplo:&#10;Ana&#10;Bruno&#10;Carla&#10;Diego" aria-label="Lista de nomes para o sorteio"></textarea>
+            <button class="btn-primary" id="btn-run-draw" type="button">Sortear times</button>
+            <p class="draw-status" id="draw-status" aria-live="polite"></p>
+        </div>
+        <div class="card" id="draw-results-card" hidden>
+            <div class="section-title">Times sorteados</div>
+            <ul class="draw-team-list" id="draw-team-list"></ul>
+            <div class="draw-result-actions">
+                <button class="btn-primary" id="btn-start-draw-rotation" type="button">▶️ Iniciar rotação</button>
+                <button class="btn-secondary" id="btn-share-draw" type="button">📤 Compartilhar times</button>
+            </div>
+        </div>
+        <button class="btn-secondary" id="btn-back-from-draw" type="button">Voltar para a tela principal</button>
     </div>
 
     <!-- TELA 3: GERENCIAMENTO DE TIMES EM ANDAMENTO -->
@@ -956,7 +1159,10 @@
         waitingWinnerId: null,
         matchNumber: 1,
         history: [], // [{ matchNum, winnerId, winnerName, loserName }]
-        historyStateStack: [] // Pilha de estados anteriores para Desfazer real
+        historyStateStack: [], // Pilha de estados anteriores para Desfazer real
+        drawInput: '',
+        drawTeams: [],
+        drawNextPlayerId: 1
     };
 
     // Identificadores Únicos
@@ -966,7 +1172,8 @@
     const screens = {
         setup: document.getElementById('setup-screen'),
         main: document.getElementById('main-screen'),
-        manage: document.getElementById('manage-screen')
+        manage: document.getElementById('manage-screen'),
+        draw: document.getElementById('draw-screen')
     };
 
     // Carregar Estado do LocalStorage se existir
@@ -978,6 +1185,14 @@
                 state = parsed;
                 state.setupType ??= 'time';
                 state.waitingWinnerId ??= null;
+                state.drawInput ??= '';
+                state.drawTeams ??= [];
+                state.drawNextPlayerId ??= 1;
+                const nextPlayerId = state.drawTeams.reduce((nextId, team) => (
+                    team.members.reduce((nextMemberId, member) => Math.max(nextMemberId, member.id + 1), nextId)
+                ), 1);
+                state.drawNextPlayerId = Math.max(state.drawNextPlayerId, nextPlayerId);
+                document.getElementById('draw-names-input').value = state.drawInput;
                 state.teams?.forEach(team => {
                     team.consecutiveWins ??= 0;
                     team.type ??= 'time';
@@ -1082,10 +1297,20 @@
 
             if (t1 && t2) {
                 document.getElementById('label-team-1').innerText = `${team1HasStreak ? '🔥 ' : ''}${t1.name}`;
+                const roster1 = document.getElementById('roster-team-1');
+                roster1.hidden = !t1.members?.length;
+                roster1.innerText = t1.members?.length
+                    ? getOrderedTeamMembers(t1).map(member => member.id === t1.setterId ? `L - ${member.name}` : member.name).join(' · ')
+                    : '';
                 document.getElementById('wins-team-1').innerText = `Vitórias: ${t1.consecutiveWins}`;
                 document.getElementById('btn-win-1').setAttribute('aria-label', `Marcar ${t1.name} como vencedor`);
 
                 document.getElementById('label-team-2').innerText = `${team2HasStreak ? '🔥 ' : ''}${t2.name}`;
+                const roster2 = document.getElementById('roster-team-2');
+                roster2.hidden = !t2.members?.length;
+                roster2.innerText = t2.members?.length
+                    ? getOrderedTeamMembers(t2).map(member => member.id === t2.setterId ? `L - ${member.name}` : member.name).join(' · ')
+                    : '';
                 document.getElementById('wins-team-2').innerText = `Vitórias: ${t2.consecutiveWins}`;
                 document.getElementById('btn-win-2').setAttribute('aria-label', `Marcar ${t2.name} como vencedor`);
             }
@@ -1170,8 +1395,400 @@
             });
         }
 
+        if (screens.draw.classList.contains('active')) {
+            renderDrawTeams();
+        }
+
         saveToStorage();
     }
+
+    function chooseRandomMember(members) {
+        return members.length > 0 ? members[Math.floor(Math.random() * members.length)].id : null;
+    }
+
+    function getOrderedTeamMembers(team) {
+        return [...team.members].sort((a, b) => (
+            Number(b.id === team.setterId) - Number(a.id === team.setterId)
+        ));
+    }
+
+    let editingDrawPlayer = null;
+
+    function renderDrawTeams() {
+        const resultsCard = document.getElementById('draw-results-card');
+        const teamList = document.getElementById('draw-team-list');
+        resultsCard.hidden = state.drawTeams.length === 0;
+        document.getElementById('btn-start-draw-rotation').disabled = state.drawTeams.length < 2;
+        teamList.replaceChildren();
+
+        state.drawTeams.forEach((team, teamIndex) => {
+            const teamCard = document.createElement('li');
+            teamCard.className = 'draw-team-card';
+
+            const heading = document.createElement('div');
+            heading.className = 'draw-team-heading';
+            const title = document.createElement('h3');
+            title.innerText = `Time ${teamIndex + 1}`;
+            const count = document.createElement('span');
+            count.className = 'team-wins';
+            count.innerText = `${team.members.length}/4 pessoas`;
+            heading.append(title, count);
+
+            const playerList = document.createElement('ul');
+            playerList.className = 'draw-player-list';
+            if (team.members.length === 0) {
+                const emptyMessage = document.createElement('li');
+                emptyMessage.className = 'draw-empty-team';
+                emptyMessage.innerText = 'Time vazio. Adicione uma pessoa abaixo.';
+                playerList.appendChild(emptyMessage);
+            }
+
+            getOrderedTeamMembers(team).forEach(member => {
+                const playerRow = document.createElement('li');
+                playerRow.className = 'draw-player-row';
+
+                const isEditing = editingDrawPlayer?.teamId === team.id
+                    && editingDrawPlayer.playerId === member.id;
+                if (isEditing) {
+                    const nameInput = document.createElement('input');
+                    nameInput.type = 'text';
+                    nameInput.className = 'draw-player-name-input';
+                    nameInput.value = member.name;
+                    nameInput.maxLength = 100;
+                    nameInput.setAttribute('aria-label', `Editar nome de ${member.name}`);
+                    playerRow.appendChild(nameInput);
+
+                    const editActions = document.createElement('div');
+                    editActions.className = 'draw-player-actions';
+                    const saveButton = document.createElement('button');
+                    saveButton.type = 'button';
+                    saveButton.className = 'icon-btn';
+                    saveButton.innerText = '✅';
+                    saveButton.title = 'Salvar nome';
+                    saveButton.setAttribute('aria-label', `Salvar nome de ${member.name}`);
+                    saveButton.addEventListener('click', () => saveDrawPlayerName(team.id, member.id, nameInput.value));
+
+                    const cancelButton = document.createElement('button');
+                    cancelButton.type = 'button';
+                    cancelButton.className = 'icon-btn delete-player-button';
+                    cancelButton.innerText = '❌';
+                    cancelButton.title = 'Cancelar edição';
+                    cancelButton.setAttribute('aria-label', 'Cancelar edição do nome');
+                    cancelButton.addEventListener('click', () => {
+                        editingDrawPlayer = null;
+                        render();
+                    });
+                    nameInput.addEventListener('keydown', event => {
+                        if (event.key === 'Enter') saveDrawPlayerName(team.id, member.id, nameInput.value);
+                        if (event.key === 'Escape') {
+                            editingDrawPlayer = null;
+                            render();
+                        }
+                    });
+                    editActions.append(saveButton, cancelButton);
+                    playerRow.appendChild(editActions);
+                } else {
+                    const name = document.createElement('span');
+                    name.className = 'draw-player-name';
+                    name.innerText = member.name;
+                    playerRow.appendChild(name);
+                }
+
+                if (!isEditing && team.setterId === member.id) {
+                    const setterBadge = document.createElement('span');
+                    setterBadge.className = 'setter-badge';
+                    setterBadge.innerText = 'L';
+                    setterBadge.setAttribute('aria-label', 'Levantador');
+                    playerRow.appendChild(setterBadge);
+                }
+
+                if (!isEditing && team.setterId !== member.id) {
+                    const setterButton = document.createElement('button');
+                    setterButton.type = 'button';
+                    setterButton.className = 'setter-button';
+                    setterButton.setAttribute('aria-pressed', 'false');
+                    setterButton.innerText = 'Definir como L';
+                    setterButton.addEventListener('click', () => {
+                        team.setterId = member.id;
+                        render();
+                    });
+                    playerRow.appendChild(setterButton);
+                }
+
+                if (!isEditing) {
+                    const playerActions = document.createElement('div');
+                    playerActions.className = 'draw-player-actions';
+                    const editButton = document.createElement('button');
+                    editButton.type = 'button';
+                    editButton.className = 'icon-btn';
+                    editButton.innerText = '✏️';
+                    editButton.title = 'Editar pessoa';
+                    editButton.setAttribute('aria-label', `Editar ${member.name}`);
+                    editButton.addEventListener('click', () => {
+                        editingDrawPlayer = { teamId: team.id, playerId: member.id };
+                        render();
+                        document.querySelector('.draw-player-name-input')?.focus();
+                    });
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.type = 'button';
+                    deleteButton.className = 'icon-btn delete-player-button';
+                    deleteButton.innerText = '🗑️';
+                    deleteButton.title = 'Excluir pessoa';
+                    deleteButton.setAttribute('aria-label', `Excluir ${member.name}`);
+                    deleteButton.addEventListener('click', () => removeDrawPlayer(team.id, member.id));
+                    playerActions.append(editButton, deleteButton);
+                    playerRow.appendChild(playerActions);
+                }
+
+                const editControls = document.createElement('div');
+                editControls.className = 'draw-player-edit';
+                const destination = document.createElement('select');
+                destination.setAttribute('aria-label', `Mover ${member.name} para outro time`);
+                const placeholder = document.createElement('option');
+                placeholder.value = '';
+                placeholder.innerText = 'Mover para...';
+                destination.appendChild(placeholder);
+
+                const availableTeams = state.drawTeams.filter(otherTeam => otherTeam.id !== team.id);
+                availableTeams.forEach(otherTeam => {
+                    const option = document.createElement('option');
+                    option.value = String(otherTeam.id);
+                    option.innerText = `Time ${state.drawTeams.indexOf(otherTeam) + 1}`;
+                    destination.appendChild(option);
+                });
+                destination.disabled = availableTeams.length === 0;
+
+                const moveButton = document.createElement('button');
+                moveButton.type = 'button';
+                moveButton.className = 'btn-secondary';
+                moveButton.innerText = 'Mover';
+                moveButton.disabled = availableTeams.length === 0;
+                moveButton.addEventListener('click', () => {
+                    const destinationId = Number(destination.value);
+                    if (destination.value) moveDrawPlayer(team.id, member.id, destinationId);
+                });
+                editControls.append(destination, moveButton);
+                playerRow.appendChild(editControls);
+                playerList.appendChild(playerRow);
+            });
+
+            const addPlayerForm = document.createElement('form');
+            addPlayerForm.className = 'draw-add-player';
+            const playerInput = document.createElement('input');
+            playerInput.type = 'text';
+            playerInput.className = 'draw-player-input';
+            playerInput.placeholder = 'Adicionar pessoa ao time';
+            playerInput.setAttribute('aria-label', `Adicionar pessoa ao Time ${teamIndex + 1}`);
+            playerInput.maxLength = 100;
+            playerInput.disabled = team.members.length >= 4;
+            const addButton = document.createElement('button');
+            addButton.type = 'submit';
+            addButton.className = 'btn-primary';
+            addButton.innerText = 'Adicionar';
+            addButton.disabled = team.members.length >= 4;
+            addPlayerForm.append(playerInput, addButton);
+            addPlayerForm.addEventListener('submit', event => {
+                event.preventDefault();
+                addDrawPlayer(team.id, playerInput.value);
+            });
+
+            teamCard.append(heading, playerList, addPlayerForm);
+            teamList.appendChild(teamCard);
+        });
+    }
+
+    function saveDrawPlayerName(teamId, playerId, name) {
+        const team = state.drawTeams.find(item => item.id === teamId);
+        const member = team?.members.find(item => item.id === playerId);
+        const updatedName = name.trim();
+        if (!team || !member) return;
+        if (!updatedName) {
+            document.getElementById('draw-status').innerText = 'O nome da pessoa não pode ficar vazio.';
+            return;
+        }
+
+        member.name = updatedName;
+        editingDrawPlayer = null;
+        document.getElementById('draw-status').innerText = 'Nome atualizado.';
+        render();
+    }
+
+    function removeDrawPlayer(teamId, playerId) {
+        const team = state.drawTeams.find(item => item.id === teamId);
+        if (!team) return;
+
+        const playerIndex = team.members.findIndex(member => member.id === playerId);
+        if (playerIndex < 0) return;
+        const [removedPlayer] = team.members.splice(playerIndex, 1);
+        if (team.setterId === playerId) {
+            team.setterId = chooseRandomMember(team.members);
+        }
+        editingDrawPlayer = null;
+        document.getElementById('draw-status').innerText = `${removedPlayer.name} foi excluído do Time ${state.drawTeams.indexOf(team) + 1}.`;
+        render();
+    }
+
+    function moveDrawPlayer(sourceTeamId, playerId, destinationTeamId) {
+        const sourceTeam = state.drawTeams.find(team => team.id === sourceTeamId);
+        const destinationTeam = state.drawTeams.find(team => team.id === destinationTeamId);
+        if (!sourceTeam || !destinationTeam || sourceTeam.id === destinationTeam.id) return;
+
+        const playerIndex = sourceTeam.members.findIndex(member => member.id === playerId);
+        if (playerIndex < 0) return;
+        const [player] = sourceTeam.members.splice(playerIndex, 1);
+        if (sourceTeam.setterId === playerId) {
+            sourceTeam.setterId = chooseRandomMember(sourceTeam.members);
+        }
+        destinationTeam.members.push(player);
+        if (!destinationTeam.setterId) destinationTeam.setterId = player.id;
+        editingDrawPlayer = null;
+        document.getElementById('draw-status').innerText = `${player.name} foi movido para o Time ${state.drawTeams.indexOf(destinationTeam) + 1}.`;
+        render();
+    }
+
+    function addDrawPlayer(teamId, name) {
+        const team = state.drawTeams.find(item => item.id === teamId);
+        const playerName = name.trim();
+        if (!team || !playerName) return;
+        if (team.members.length >= 4) {
+            document.getElementById('draw-status').innerText = 'Cada time pode ter no máximo 4 pessoas.';
+            return;
+        }
+
+        const member = { id: state.drawNextPlayerId++, name: playerName };
+        team.members.push(member);
+        if (!team.setterId) team.setterId = member.id;
+        document.getElementById('draw-status').innerText = `${playerName} foi adicionado ao Time ${state.drawTeams.indexOf(team) + 1}.`;
+        render();
+    }
+
+    function parseDrawNames(input) {
+        return input
+            .split(/[\n,;]+/)
+            .map(entry => entry
+                .replace(/^\s*\d+\s*[.):\]-]?\s*/, '')
+                .replace(/[^\p{L}\p{M}\s]/gu, ' ')
+                .replace(/\s+/g, ' ')
+                .trim())
+            .filter(Boolean);
+    }
+
+    function drawTeamsFromNames() {
+        const namesInput = document.getElementById('draw-names-input');
+        const names = parseDrawNames(namesInput.value);
+
+        if (names.length === 0) {
+            document.getElementById('draw-status').innerText = 'Digite ou cole pelo menos um nome para sortear.';
+            saveToStorage();
+            return;
+        }
+
+        state.drawInput = '';
+        namesInput.value = '';
+
+        for (let index = names.length - 1; index > 0; index--) {
+            const randomIndex = Math.floor(Math.random() * (index + 1));
+            [names[index], names[randomIndex]] = [names[randomIndex], names[index]];
+        }
+
+        state.drawTeams = [];
+        for (let index = 0; index < names.length; index += 4) {
+            const members = names.slice(index, index + 4).map(name => ({
+                id: state.drawNextPlayerId++,
+                name
+            }));
+            state.drawTeams.push({
+                id: state.drawTeams.length + 1,
+                members,
+                setterId: chooseRandomMember(members)
+            });
+        }
+
+        const teamCount = state.drawTeams.length;
+        document.getElementById('draw-status').innerText = teamCount < 2
+            ? `Sorteio concluído: ${names.length} pessoas em 1 time. Para iniciar a rotação, sorteie pelo menos 2 times.`
+            : `Sorteio concluído: ${names.length} pessoas em ${teamCount} times.`;
+        render();
+    }
+
+    function getDrawShareText() {
+        const teamLines = state.drawTeams.map((team, index) => {
+            const memberLines = getOrderedTeamMembers(team).map(member => (
+                team.setterId === member.id ? `L - ${member.name}` : `• ${member.name}`
+            ));
+            return `Time ${index + 1}\n${memberLines.join('\n')}`;
+        });
+        return `🏐 Times sorteados\n\n${teamLines.join('\n\n')}`;
+    }
+
+    function startRotationFromDraw() {
+        if (state.drawTeams.length < 2) {
+            document.getElementById('draw-status').innerText = 'São necessários pelo menos 2 times para iniciar a rotação.';
+            return;
+        }
+
+        state.teams = state.drawTeams.map((team, index) => ({
+            id: nextId++,
+            name: `Time ${index + 1}`,
+            type: 'time',
+            consecutiveWins: 0,
+            members: team.members.map(member => ({ ...member })),
+            setterId: team.setterId
+        }));
+        state.court1 = state.teams[0].id;
+        state.court2 = state.teams[1].id;
+        state.queue = state.teams.slice(2).map(team => team.id);
+        state.waitingWinnerId = null;
+        state.matchNumber = 1;
+        state.history = [];
+        state.historyStateStack = [];
+
+        showScreen('main');
+        render();
+    }
+
+    document.getElementById('draw-names-input').addEventListener('input', event => {
+        state.drawInput = event.currentTarget.value;
+        saveToStorage();
+    });
+    document.getElementById('btn-run-draw').addEventListener('click', drawTeamsFromNames);
+    document.getElementById('btn-start-draw-rotation').addEventListener('click', startRotationFromDraw);
+    document.getElementById('btn-share-draw').addEventListener('click', async event => {
+        const button = event.currentTarget;
+        const shareData = {
+            title: '🏐 Times sorteados',
+            text: getDrawShareText()
+        };
+
+        try {
+            if (navigator.share) {
+                await navigator.share(shareData);
+                return;
+            }
+
+            await navigator.clipboard.writeText(shareData.text);
+            button.innerText = '✅ Times copiados!';
+            window.setTimeout(() => {
+                button.innerText = '📤 Compartilhar times';
+            }, 2000);
+        } catch (error) {
+            if (error.name !== 'AbortError') {
+                button.innerText = 'Não foi possível compartilhar';
+                window.setTimeout(() => {
+                    button.innerText = '📤 Compartilhar times';
+                }, 2500);
+            }
+        }
+    });
+    document.getElementById('btn-open-draw').addEventListener('click', () => {
+        showScreen('draw');
+        render();
+    });
+    document.getElementById('btn-back-from-draw').addEventListener('click', () => {
+        showScreen('main');
+        render();
+    });
 
     // --- FUNÇÕES DE SETUP ---
     function nextSetupParticipantName() {
@@ -1276,6 +1893,17 @@
 
         winner.consecutiveWins++;
 
+        if (state.teams.length === 2) {
+            loser.consecutiveWins = 0;
+            state.court1 = winner.id;
+            state.court2 = loser.id;
+            state.queue = [];
+            state.waitingWinnerId = null;
+            state.matchNumber++;
+            render();
+            return;
+        }
+
         if (state.waitingWinnerId !== null) {
             const returningWinnerId = state.waitingWinnerId;
             state.waitingWinnerId = null;
@@ -1345,14 +1973,13 @@
             "Para evitar um reinício acidental, confirme a senha e reinicie a rotação.",
             () => {
                 // Reconstruir com os mesmos times atuais
-                const currentNames = state.teams.map(t => t.name);
-                if (currentNames.length < 3) {
+                if (state.teams.length < 2) {
                     showScreen('setup');
                     return;
                 }
-                state.teams = currentNames.map((name, idx) => ({
+                state.teams = state.teams.map((team, idx) => ({
+                    ...team,
                     id: idx + 1,
-                    name: name,
                     consecutiveWins: 0
                 }));
                 nextId = state.teams.length + 1;
@@ -1526,8 +2153,12 @@
                     waitingWinnerId: null,
                     matchNumber: 1,
                     history: [],
-                    historyStateStack: []
+                    historyStateStack: [],
+                    drawInput: '',
+                    drawTeams: [],
+                    drawNextPlayerId: 1
                 };
+                document.getElementById('draw-names-input').value = '';
                 document.getElementById('new-team-input').value = '';
                 showScreen('setup');
                 render();
@@ -1629,7 +2260,7 @@
         }
     });
 
-    document.getElementById('btn-ranking').addEventListener('click', () => {
+    function getRankingRows() {
         const rankingMap = new Map();
         state.teams.forEach(team => {
             rankingMap.set(team.id, { id: team.id, name: team.name, wins: 0 });
@@ -1642,8 +2273,23 @@
             rankingMap.set(key, current);
         });
 
-        const ranking = [...rankingMap.values()]
+        return [...rankingMap.values()]
             .sort((a, b) => b.wins - a.wins || a.name.localeCompare(b.name, 'pt-BR'));
+    }
+
+    function getRankingShareText(ranking) {
+        const shareLines = ranking.map((team, index) => {
+            const medal = ['🥇', '🥈', '🥉'][index] || '🏅';
+            return `${index + 1}º ${team.name} — ${medal} ${team.wins} ${team.wins === 1 ? 'vitória' : 'vitórias'}`;
+        });
+        const details = shareLines.length > 0
+            ? `\n\n${shareLines.join('\n')}`
+            : '\nAinda não há vitórias registradas nesta rotação.';
+        return `🏆 Ranking de Vitórias\nTotal de times: ${state.teams.length}${details}`;
+    }
+
+    document.getElementById('btn-ranking').addEventListener('click', () => {
+        const ranking = getRankingRows();
 
         const rankingSummary = document.createElement('p');
         rankingSummary.className = 'ranking-empty';
@@ -1656,8 +2302,7 @@
             const emptyMessage = document.createElement('p');
             emptyMessage.className = 'ranking-empty';
             emptyMessage.innerText = 'Ainda não há vitórias registradas nesta rotação.';
-            const shareText = `🏆 Ranking de Vitórias\nTotal de times: ${state.teams.length}\nAinda não há vitórias registradas nesta rotação.`;
-            openInfoModal('🏆 Ranking de Vitórias', [rankingSummary, emptyMessage], shareText);
+            openInfoModal('🏆 Ranking de Vitórias', [rankingSummary, emptyMessage], getRankingShareText(ranking));
             return;
         }
 
@@ -1688,12 +2333,7 @@
 
         const rankingContainer = document.createElement('div');
         rankingContainer.append(rankingSummary, rankingList);
-        const shareLines = ranking.map((team, index) => {
-            const medal = ['🥇', '🥈', '🥉'][index] || '🏅';
-            return `${index + 1}º ${team.name} — ${medal} ${team.wins} ${team.wins === 1 ? 'vitória' : 'vitórias'}`;
-        });
-        const shareText = `🏆 Ranking de Vitórias\nTotal de times: ${state.teams.length}\n\n${shareLines.join('\n')}`;
-        openInfoModal('🏆 Ranking de Vitórias', rankingContainer, shareText);
+        openInfoModal('🏆 Ranking de Vitórias', rankingContainer, getRankingShareText(ranking));
     });
 
     document.getElementById('btn-about').addEventListener('click', () => {
